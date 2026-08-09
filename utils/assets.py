@@ -58,6 +58,7 @@ def _normaliseTsLocations(tsFile: Path) -> tuple[int, int]:
         ET.indent(tree, space="  ")
         header = '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE TS>\n'
         xmlBody = ET.tostring(root, encoding="unicode", short_empty_elements=True)
+        xmlBody = xmlBody.replace(" />", "/>")  # Remove space before self-closing tags
         tsFile.write_text(f"{header}{xmlBody}\n", encoding="utf-8")
 
     return nLines, nMerged
