@@ -38,7 +38,6 @@ from utils.common import (
     extractVersion,
     makeCheckSum,
     readFile,
-    stripVersion,
     toUpload,
     writeFile,
 )
@@ -152,8 +151,7 @@ def flatpak(args: argparse.Namespace) -> None:
     qtVersion = buildInfo["qt_version"]
     enchantVersion = buildInfo["enchant_version"]
 
-    numVers, _, relDate = extractVersion()
-    pkgVers = stripVersion(numVers)
+    pkgVers, _, relDate = extractVersion()
     relDate = datetime.datetime.strptime(relDate, "%Y-%m-%d")
 
     bldDir = ROOT_DIR / "dist_flatpak"
@@ -240,8 +238,8 @@ def flathub(args: argparse.Namespace) -> None:
     qtVersion = buildInfo["qt_version"]
     enchantVersion = buildInfo["enchant_version"]
 
-    numVers, _, _ = extractVersion()
-    tag = f"v{numVers}"
+    pkgVers, _, _ = extractVersion()
+    tag = f"v{pkgVers}"
 
     bldDir = ROOT_DIR / "dist_flathub"
     bldDir.mkdir(exist_ok=True)
@@ -254,7 +252,7 @@ def flathub(args: argparse.Namespace) -> None:
     print("======================")
     print("")
 
-    commitApiUrl = NW_COMMIT_API.format(version=numVers)
+    commitApiUrl = NW_COMMIT_API.format(version=pkgVers)
     try:
         print(f"Checking: {commitApiUrl}")
         with urllib.request.urlopen(commitApiUrl) as response:
@@ -266,7 +264,7 @@ def flathub(args: argparse.Namespace) -> None:
         print("")
         print(str(exc))
         print("")
-        print(f"Has version {numVers} been tagged and pushed to GitHub yet?")
+        print(f"Has version {pkgVers} been tagged and pushed to GitHub yet?")
         print("")
         sys.exit(1)
 
