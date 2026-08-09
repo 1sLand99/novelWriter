@@ -1,6 +1,41 @@
 # novelWriter Changelog
 
-## Version 26.2 Beta 2 [2026-08-02]
+## Version 2026.2 RC 1 [2026-08-09]
+
+### Release Notes
+
+This is a release candidate of the next release version, and is intended for testing purposes.
+Please be careful when using this version on live writing projects, and make sure you take frequent
+backups.
+
+Note that 2026.2 Beta 2 and newer upgrades a project on first load, so it can no longer be opened
+in an older version of novelWriter. 2026.2 Beta 1 and newer also updates the main config file, but
+leaves the old one in place, so this is not blocking older versions but be aware that the config
+changes do not pass between the old and new config files once the new config file exists.
+
+### Detailed Changelog
+
+**Bugfixes**
+
+* Fixed a bug in the updated drag and drop implementation in the project tree from the Beta 1
+  release. The tree no longer allowed an item to be dropped on top of another to make it a child of
+  the item. Issue #2953. PR #2954.
+
+**Improvements**
+
+* Improved dialogue highlighting for single-quoted dialogue when the text included apostrophes.
+  Discussed in #2633. PR #2956.
+* Updated the new project builder so it doesn't claim the index is broken the first time it is
+  opened. It is only "broken" in the sense that it is missing the first time. The index is now
+  built when the project is created, so the warning no longer appears. Issue #2952. PR #2954.
+
+**Documentation**
+
+* Removed broken link and associated instructions on the dictionary install page. PR #2951.
+
+----
+
+## Version 2026.2 Beta 2 [2026-08-02]
 
 ### Release Notes
 
@@ -59,7 +94,7 @@ careful when using this version on live writing projects, and make sure you take
 
 ----
 
-## Version 26.2 Beta 1 [2026-07-26]
+## Version 2026.2 Beta 1 [2026-07-26]
 
 ### Release Notes
 
@@ -185,7 +220,7 @@ careful when using this version on live writing projects, and make sure you take
 
 ----
 
-## Version 26.1.2 [2026-07-25]
+## Version 2026.1.2 [2026-07-25]
 
 ### Release Notes
 
@@ -210,7 +245,7 @@ on older versions of Qt. Japanese and Russian translations have also been update
 
 ----
 
-## Version 26.1.1 [2026-06-28]
+## Version 2026.1.1 [2026-06-28]
 
 ### Release Notes
 
@@ -248,7 +283,7 @@ app on Linux.
 
 ----
 
-## Version 26.1 [2026-04-26]
+## Version 2026.1 [2026-04-26]
 
 ### Release Notes
 
@@ -279,7 +314,7 @@ See the website for complete [Release Notes](https://novelwriter.io/releases/rel
 
 ----
 
-## Version 26.1 RC 1 [2026-04-13]
+## Version 2026.1 RC 1 [2026-04-13]
 
 ### Release Notes
 
@@ -321,7 +356,7 @@ Note: There are no longer any Mac releases produced for novelWriter. See #2618.
 
 ----
 
-## Version 26.1 Beta 2 [2026-04-04]
+## Version 2026.1 Beta 2 [2026-04-04]
 
 ### Release Notes
 
@@ -341,7 +376,7 @@ Note: There are no longer any Mac releases produced for novelWriter. See #2618.
 
 ----
 
-## Version 26.1 Beta 1 [2026-04-02]
+## Version 2026.1 Beta 1 [2026-04-02]
 
 ### Release Notes
 

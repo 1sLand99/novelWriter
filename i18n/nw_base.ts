@@ -416,6 +416,11 @@
       <source>Revert</source>
       <translation type="unfinished" />
     </message>
+    <message>
+      <location filename="../novelwriter/gui/theme.py" />
+      <source>Select Font</source>
+      <translation type="unfinished" />
+    </message>
   </context>
   <context>
     <name>Common</name>
@@ -870,11 +875,6 @@
     <message>
       <location filename="../novelwriter/constants.py" />
       <source>Markdown files</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <location filename="../novelwriter/constants.py" />
-      <source>novelWriter files</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -1348,11 +1348,6 @@
     <message>
       <location filename="../novelwriter/editor/editsearch.py" />
       <source>Replace with</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <location filename="../novelwriter/editor/editsearch.py" />
-      <source>Search</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -1987,6 +1982,11 @@
     <message>
       <location filename="../novelwriter/guimain.py" />
       <source>Do you want to exit novelWriter?</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../novelwriter/guimain.py" />
+      <source>Loaded theme "{0}" by {1}</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -3068,11 +3068,6 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py" />
       <source>User interface icon theme.</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <location filename="../novelwriter/dialogs/preferences.py" />
-      <source>Select Font</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -4777,11 +4772,6 @@
       <source>Select Keyword</source>
       <translation type="unfinished" />
     </message>
-    <message>
-      <location filename="../novelwriter/manuscript/manussettings.py" />
-      <source>Select Font</source>
-      <translation type="unfinished" />
-    </message>
   </context>
   <context>
     <name>_GoalsPage</name>
@@ -4802,12 +4792,12 @@
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py" />
-      <source>words</source>
+      <source>Daily writing goal</source>
       <translation type="unfinished" />
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py" />
-      <source>Daily writing goal</source>
+      <source>Count characters instead of words</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -4822,7 +4812,7 @@
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py" />
-      <source>Calculates daily goal based on target date and word count.</source>
+      <source>Calculates daily goal based on project target and date.</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -5161,11 +5151,6 @@
   </context>
   <context>
     <name>_PreviewWidget</name>
-    <message>
-      <location filename="../novelwriter/manuscript/manuscript.py" />
-      <source>Press the "Preview" button to generate ...</source>
-      <translation type="unfinished" />
-    </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py" />
       <source>Processing ...</source>
