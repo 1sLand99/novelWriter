@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Seleccionar font</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1015,7 +1015,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Filtres de documents</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1040,7 +1040,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">Capçaleres</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1574,7 +1574,7 @@
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>Edit</source>
-      <translation type="unfinished">Editar</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Detalls</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -2620,7 +2620,7 @@
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
@@ -2731,7 +2731,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
@@ -2756,7 +2756,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Build Settings</source>
-      <translation type="unfinished"/>
+      <translation>Paràmetres de construcció</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
@@ -3378,7 +3378,7 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Line height</source>
-      <translation type="unfinished">Alçada de la línia</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -4021,7 +4021,7 @@
     <message>
       <location filename="../novelwriter/gui/sidebar.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/sidebar.py"/>
@@ -5218,7 +5218,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filtres</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -5284,7 +5284,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Valor</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

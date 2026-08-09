@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Schriftart auswählen</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1015,7 +1015,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Dokumentenfilter</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1040,7 +1040,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">Überschriften</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1574,7 +1574,7 @@
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>Edit</source>
-      <translation type="unfinished">Bearbeiten</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Details</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -3378,7 +3378,7 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Line height</source>
-      <translation type="unfinished">Zeilenabstand</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -3588,7 +3588,7 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Add highlight colour to emphasised text</source>
-      <translation>Formatierten Text hervorheben</translation>
+      <translation>Kursiven und fetten Text hervorheben</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -5218,7 +5218,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filter</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -5284,7 +5284,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Wert</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

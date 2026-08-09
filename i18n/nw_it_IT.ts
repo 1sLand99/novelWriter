@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Seleziona il tipo di carattere</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1015,7 +1015,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Filtri del documento</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1040,7 +1040,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">Intestazioni</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1120,7 +1120,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Single right-pointing angle quotation mark</source>
-      <translation>Virgoletta singola ad angolo destro (&gt;)</translation>
+      <translation>Virgoletta singola ad angolo destro (>)</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1130,7 +1130,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Double right-pointing angle quotation mark</source>
-      <translation>Virgolette doppie ad angolo destro (&gt;&gt;)</translation>
+      <translation>Virgolette doppie ad angolo destro (>>)</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1574,7 +1574,7 @@
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>Edit</source>
-      <translation type="unfinished">Modifica</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Dettagli</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -3378,7 +3378,7 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Line height</source>
-      <translation type="unfinished">Altezza della riga</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -5218,7 +5218,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filtri</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -5284,7 +5284,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Valore</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
