@@ -157,6 +157,16 @@ class NFontDialog(QFontDialog):
     def selectFont(font: QFont, parent: QWidget, title: str, native: bool) -> tuple[QFont, bool]:
         """Open the dialog and select a font."""
         if native:
+            if CONFIG.osDarwin:
+                # The macOS font panel has no accept button, so closing it
+                # must count as accepting the current font.
+                # Also we can't use `QFontDialog.getFont(..)` because it
+                # always returns the previously selected font without an accept action
+                dialog = QFontDialog(font, parent)
+                dialog.setWindowTitle(title)
+                dialog.exec()
+                return dialog.currentFont(), True
+
             # If we're using the native dialog, let Qt handle it
             font, result = QFontDialog.getFont(font, parent, title)
             return font, bool(result)
