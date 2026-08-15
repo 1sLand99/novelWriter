@@ -483,8 +483,10 @@ class NTabWidget(QTabWidget):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent=parent)
-        self.setDocumentMode(True)
         self.setTabBar(NTabBar(self))
+        self.setDocumentMode(True)
+        if tabBar := self.tabBar():  # pragma: no branch
+            tabBar.setDrawBase(False)
 
     def refreshTheme(self) -> None:
         """Refresh the tab colours for theme updates."""
