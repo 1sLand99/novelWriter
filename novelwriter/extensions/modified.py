@@ -483,8 +483,8 @@ class NTabWidget(QTabWidget):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent=parent)
-        self.setDocumentMode(True)
         self.setTabBar(NTabBar(self))
+        self.setDocumentMode(True)
 
     def refreshTheme(self) -> None:
         """Refresh the tab colours for theme updates."""
@@ -501,6 +501,7 @@ class NTabBar(QTabBar):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent=parent)
+        self.setDrawBase(False)
 
     def tabSizeHint(self, index: int) -> QSize:
         """Reduce the tab height by shrinking the margin above and below the text."""
