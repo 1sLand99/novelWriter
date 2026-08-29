@@ -1,0 +1,103 @@
+name: Part-Package
+
+on:
+  workflow_call:
+    inputs:
+      publish:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      CLOUDSMITH_API_KEY:
+        required: false
+
+jobs:
+  buildPackage:
+    name: Build Package (${{ matrix.codename }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - codename: bookworm
+            family: debian
+            image: debian:12
+            qtSvg: false
+          - codename: trixie
+            family: debian
+            image: debian:13
+            qtSvg: true
+          - codename: noble
+            family: ubuntu
+            image: ubuntu:24.04
+            qtSvg: false
+          - codename: resolute
+            family: ubuntu
+            image: ubuntu:26.04
+            qtSvg: true
+          - codename: stonking
+            family: ubuntu
+            image: ubuntu:26.10
+            qtSvg: true
+    steps:
+      - name: Install Checkout Prerequisites
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates python3
+
+      - name: Checkout Source
+        uses: actions/checkout@v7
+
+      - name: Download Assets Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: nw-assets
+          path: novelwriter/assets
+
+      - name: Download Wheel Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: nw-wheel
+          path: wheel-artifact
+
+      - name: Install Native Packages
+        run: |
+          apt-get install -y dh-python python3-all debhelper pybuild-plugin-pyproject \
+            python3-pyqt6 python3-pyqt6.qtsvg python3-enchant qt6-image-formats-plugins \
+            python3-pytest python3-pytestqt python3-pytest-timeout
+
+      - name: Install Qt6 SVG Plugins
+        if: ${{ matrix.qtSvg }}
+        run: apt-get install -y qt6-svg-plugins
+
+      - name: Build Package
+        run: |
+          WHEEL="$(find wheel-artifact -name '*.whl')"
+          python3 pkgutils.py build-deb ${{ matrix.codename }} --wheel "$WHEEL"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: nw-deb-${{ matrix.codename }}
+          path: dist_upload/*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish to Cloudsmith
+        if: ${{ inputs.publish }}
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: |
+          apt-get install -y python3-pip
+          pip install --break-system-packages cloudsmith-cli
+          CHANNEL="$(python3 pkgutils.py channel)"
+          REPO="saga-soft/novelwriter"
+          if [ "$CHANNEL" = "pre" ]; then
+            REPO="saga-soft/novelwriter-pre"
+          fi
+          DEB_FILE="$(find dist_upload -name '*.deb')"
+          cloudsmith push deb "$REPO/${{ matrix.family }}/${{ matrix.codename }}" "$DEB_FILE" --api-key "$CLOUDSMITH_API_KEY"

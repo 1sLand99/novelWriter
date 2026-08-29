@@ -1,0 +1,27 @@
+name: PublishCloudsmith
+
+on: workflow_dispatch
+
+jobs:
+  buildAssets:
+    uses: ./.github/workflows/part_assets.yml
+    with:
+      icons-free: true
+      icons-non-free: true
+    permissions:
+      contents: read
+
+  buildWheel:
+    needs: buildAssets
+    uses: ./.github/workflows/part_wheel.yml
+    permissions:
+      contents: read
+
+  buildAndPublish:
+    needs: buildWheel
+    uses: ./.github/workflows/part_package.yml
+    with:
+      publish: true
+    secrets: inherit
+    permissions:
+      contents: read
