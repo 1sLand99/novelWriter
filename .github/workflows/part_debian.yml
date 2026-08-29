@@ -75,9 +75,9 @@ jobs:
           apt-get install -y python3-pip
           pip install --break-system-packages --ignore-installed cloudsmith-cli
           CHANNEL="$(python3 pkgutils.py channel)"
-          REPO="saga-soft/novelwriter"
+          REPO="saga-soft/stable"
           if [ "$CHANNEL" = "pre" ]; then
-            REPO="saga-soft/novelwriter-pre"
+            REPO="saga-soft/testing"
           fi
           DEB_FILE="$(find dist_upload -name '*.deb')"
           cloudsmith push deb "$REPO/${{ matrix.family }}/${{ matrix.codename }}" "$DEB_FILE" --api-key "$CLOUDSMITH_API_KEY" --republish
