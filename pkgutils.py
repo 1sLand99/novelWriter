@@ -217,8 +217,7 @@ if __name__ == "__main__":
         "distro", choices=list(utils.build_debian.DISTRO_TARGETS.keys()), help=f"Release to build for: {distros}."
     )
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
-    cmdBuildDeb.add_argument("--build", type=int, help="Set build number (used with --with-suffix).")
-    cmdBuildDeb.add_argument("--with-suffix", action="store_true", help="Tag the version with the distro name.")
+    cmdBuildDeb.add_argument("--build", type=int, help="Set build number, appended to the distro suffix.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 
     # Print Debian Build Dependencies

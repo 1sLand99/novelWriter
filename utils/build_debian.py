@@ -85,7 +85,7 @@ Description: A plain text editor for planning and writing novels
 """
 
 
-def runtimeDepends(debianVersion: int) -> list[str]:
+def runtimeDepends(target: DistroTarget) -> list[str]:
     """Return the runtime Depends for a given Debian control version."""
     depend = [
         f"python3 (>= {MIN_PY_VERSION})",
@@ -94,7 +94,7 @@ def runtimeDepends(debianVersion: int) -> list[str]:
         "python3-enchant (>= 2.0)",
         f"qt6-image-formats-plugins (>= {MIN_QT_VERS})",
     ]
-    if debianVersion > 12:
+    if target.debianVersion > 12:
         depend.append(f"qt6-svg-plugins (>= {MIN_QT_VERS})")
     return depend
 
@@ -113,11 +113,11 @@ class DistroTarget:
 
 
 DISTRO_TARGETS: dict[str, DistroTarget] = {
-    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "bookworm", oldLicense=True),
-    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "trixie"),
-    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04", oldLicense=True),
-    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04"),
-    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10"),
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "deb12u{0}", oldLicense=True),
+    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "deb13u{0}"),
+    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04.{0}", oldLicense=True),
+    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04.{0}"),
+    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10.{0}"),
 }
 
 
@@ -125,18 +125,11 @@ def aptPackages(target: DistroTarget) -> list[str]:
     """Return the plain apt package names (no version constraints) needed
     to build and test the Debian package for a given distro target.
     """
-    entries = [*BUILD_DEPENDS, *runtimeDepends(target.debianVersion), *TEST_DEPENDS]
+    entries = [*BUILD_DEPENDS, *runtimeDepends(target), *TEST_DEPENDS]
     return sorted({entry.split(" ", 1)[0] for entry in entries})
 
 
-def makeDebianPackage(
-    signKey: str | None = None,
-    sourceBuild: bool = False,
-    distName: str = "unstable",
-    buildName: str = "",
-    debianVersion: int = 13,
-    oldLicense: bool = False,
-) -> str:
+def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bool, buildNum: int) -> str:
     """Build a Debian package."""
     print("")
     print("Build Debian Package")
@@ -153,11 +146,8 @@ def makeDebianPackage(
     pkgDate = email.utils.format_datetime(relDate.replace(hour=12, tzinfo=None))
     print("")
 
-    # Use a tilde before pre-release identifiers so they sort before the
-    # final release in dpkg/apt version comparisons, regardless of distro.
     pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
-
-    pkgVers = f"{pkgVers}+{buildName}" if buildName else pkgVers
+    pkgVers = f"{pkgVers}+{target.suffix.format(buildNum)}"
 
     # Set Up Folder
     # =============
@@ -196,7 +186,7 @@ def makeDebianPackage(
     print("Copying or generating additional files ...")
     print("")
 
-    copyPackageFiles(outDir, oldLicense=oldLicense)
+    copyPackageFiles(outDir, oldLicense=target.oldLicense)
 
     # Copy/Write Debian Files
     # =======================
@@ -204,10 +194,8 @@ def makeDebianPackage(
     shutil.copytree(SETUP_DIR / "debian", debDir)
     print("Copied: debian/*")
 
-    depend = runtimeDepends(debianVersion)
-
     control = DEB_CONTROL.replace("%build-dependencies%", ",\n  ".join(BUILD_DEPENDS))
-    control = control.replace("%dependencies%", ",\n  ".join(depend))
+    control = control.replace("%dependencies%", ",\n  ".join(runtimeDepends(target)))
     control = control.replace("%test-dependencies%", ",\n  ".join(TEST_DEPENDS))
     writeFile(debDir / "control", control)
     print("Wrote:  debian/control")
@@ -215,7 +203,7 @@ def makeDebianPackage(
     writeFile(
         debDir / "changelog",
         (
-            f"novelwriter ({pkgVers}) {distName}; urgency=low\n\n"
+            f"novelwriter ({pkgVers}) {target.codename}; urgency=low\n\n"
             f"  * Update to version {pkgVers}\n\n"
             f" -- Veronica Berglyd Olsen <code@vkbo.net>  {pkgDate}\n"
         ),
@@ -260,7 +248,7 @@ def makeDebianPackage(
 
     if sourceBuild:
         ppaName = "novelwriter" if hexVers[-2] == "f" else "novelwriter-pre"
-        return f"dput {ppaName}/{distName} {bldDir}/{bldPkg}_source.changes"
+        return f"dput {ppaName}/{target.codename} {bldDir}/{bldPkg}_source.changes"
 
     return ""
 
@@ -280,20 +268,9 @@ def debian(args: argparse.Namespace) -> None:
 
     target = DISTRO_TARGETS[args.distro]
     signKey = SIGN_KEY if args.sign else None
+    bldNum = int(args.build) if args.build else 0
 
-    buildName = ""
-    if args.with_suffix:
-        bldNum = str(args.build) if args.build else "0"
-        buildName = f"{target.suffix}.{bldNum}"
-
-    makeDebianPackage(
-        signKey,
-        sourceBuild=False,
-        distName=target.codename,
-        buildName=buildName,
-        debianVersion=target.debianVersion,
-        oldLicense=target.oldLicense,
-    )
+    makeDebianPackage(target, signKey, False, bldNum)
 
 
 def launchpad(args: argparse.Namespace) -> None:
@@ -308,20 +285,16 @@ def launchpad(args: argparse.Namespace) -> None:
     print("")
 
     if args.build:
-        bldNum = str(args.build)
+        bldNum = int(args.build)
     else:
-        bldNum = "0"
+        bldNum = 0
 
-    distLoop = [
-        ("24.04", "noble", 12, True),
-        ("26.04", "resolute", 13, False),
-        ("26.10", "stonking", 13, False),
-    ]
+    ubuntuTargets = [t for t in DISTRO_TARGETS.values() if t.family == "ubuntu"]
 
     print("Building Ubuntu packages for:")
     print("")
-    for distNum, codeName, _, _ in distLoop:
-        print(f" * Ubuntu {distNum} {codeName.title()}")
+    for target in ubuntuTargets:
+        print(f" * Ubuntu {target.numVersion} {target.codename.title()}")
     print("")
 
     signKey = SIGN_KEY if args.sign else None
@@ -330,16 +303,8 @@ def launchpad(args: argparse.Namespace) -> None:
     print("")
 
     dputCmd = []
-    for distNum, codeName, debVer, oldLicense in distLoop:
-        buildName = f"ubuntu{distNum}.{bldNum}"
-        dCmd = makeDebianPackage(
-            signKey=signKey,
-            sourceBuild=True,
-            distName=codeName,
-            buildName=buildName,
-            debianVersion=debVer,
-            oldLicense=oldLicense,
-        )
+    for target in ubuntuTargets:
+        dCmd = makeDebianPackage(target, signKey, True, bldNum)
         dputCmd.append(dCmd)
 
     print("Packages Built")

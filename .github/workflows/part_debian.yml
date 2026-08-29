@@ -80,4 +80,4 @@ jobs:
             REPO="saga-soft/novelwriter-pre"
           fi
           DEB_FILE="$(find dist_upload -name '*.deb')"
-          cloudsmith push deb "$REPO/${{ matrix.family }}/${{ matrix.codename }}" "$DEB_FILE" --api-key "$CLOUDSMITH_API_KEY"
+          cloudsmith push deb "$REPO/${{ matrix.family }}/${{ matrix.codename }}" "$DEB_FILE" --api-key "$CLOUDSMITH_API_KEY" --republish
