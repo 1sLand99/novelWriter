@@ -73,7 +73,7 @@ jobs:
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
           apt-get install -y python3-pip
-          pip install --break-system-packages cloudsmith-cli
+          pip install --break-system-packages --ignore-installed cloudsmith-cli
           CHANNEL="$(python3 pkgutils.py channel)"
           REPO="saga-soft/novelwriter"
           if [ "$CHANNEL" = "pre" ]; then
