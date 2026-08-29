@@ -22,12 +22,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 import argparse
-import datetime
 import email.utils
 import shutil
 import sys
 
 from dataclasses import dataclass
+from datetime import date, datetime
 
 from utils.common import (
     MIN_PY_VERSION,
@@ -109,15 +109,16 @@ class DistroTarget:
     debianVersion: int
     image: str
     suffix: str
-    oldLicense: bool = False
+    eol: date
+    old: bool = False
 
 
 DISTRO_TARGETS: dict[str, DistroTarget] = {
-    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "deb12u{0}", oldLicense=True),
-    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "deb13u{0}"),
-    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04.{0}", oldLicense=True),
-    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04.{0}"),
-    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10.{0}"),
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "deb12u", date(2028, 6, 30), old=True),
+    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "deb13u", date(2030, 6, 30)),
+    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04.", date(2029, 5, 1), old=True),
+    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04.", date(2031, 5, 1)),
+    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10.", date(2027, 7, 1)),
 }
 
 
@@ -142,12 +143,12 @@ def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bo
     # ============
 
     numVers, hexVers, relDate = extractVersion()
-    relDate = datetime.datetime.strptime(relDate, "%Y-%m-%d")
+    relDate = datetime.strptime(relDate, "%Y-%m-%d")
     pkgDate = email.utils.format_datetime(relDate.replace(hour=12, tzinfo=None))
     print("")
 
     pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
-    pkgVers = f"{pkgVers}+{target.suffix.format(buildNum)}"
+    pkgVers = f"{pkgVers}+{target.suffix}{buildNum}"
 
     # Set Up Folder
     # =============
@@ -186,7 +187,7 @@ def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bo
     print("Copying or generating additional files ...")
     print("")
 
-    copyPackageFiles(outDir, oldLicense=target.oldLicense)
+    copyPackageFiles(outDir, oldLicense=target.old)
 
     # Copy/Write Debian Files
     # =======================
@@ -269,6 +270,10 @@ def debian(args: argparse.Namespace) -> None:
     target = DISTRO_TARGETS[args.distro]
     signKey = SIGN_KEY if args.sign else None
     bldNum = int(args.build) if args.build else 0
+
+    if date.today() > target.eol:
+        print(f"ERROR: {target.family.title()} {target.codename} is EOL, not building package for it.")
+        sys.exit(1)
 
     makeDebianPackage(target, signKey, False, bldNum)
 

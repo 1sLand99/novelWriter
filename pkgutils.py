@@ -208,28 +208,21 @@ if __name__ == "__main__":
     # Build Debian Package
     distros = ", ".join(utils.build_debian.DISTRO_TARGETS.keys())
     cmdBuildDeb = parsers.add_parser(
-        "build-deb",
-        help=(
-            "Build .deb packages for Debian and Ubuntu for publishing (e.g. to Cloudsmith). Add --sign to sign package."
-        ),
+        "build-deb", help="Build .deb packages for publishing. Add --sign to sign package."
     )
-    cmdBuildDeb.add_argument(
-        "distro", choices=list(utils.build_debian.DISTRO_TARGETS.keys()), help=f"Release to build for: {distros}."
-    )
+    cmdBuildDeb.add_argument("distro", help=f"Release to build for: {distros}.")
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildDeb.add_argument("--build", type=int, help="Set build number, appended to the distro suffix.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 
     # Print Debian Build Dependencies
-    cmdDebDepends = parsers.add_parser("build-deb-depends", help="Print the apt package depednencies.")
-    cmdDebDepends.add_argument(
-        "distro", choices=list(utils.build_debian.DISTRO_TARGETS.keys()), help=f"Release to build for: {distros}."
-    )
+    cmdDebDepends = parsers.add_parser("build-deb-depends", help="Print the apt package dependencies.")
+    cmdDebDepends.add_argument("distro", help=f"Release to build for: {distros}.")
     cmdDebDepends.set_defaults(func=utils.build_debian.printDebDepends)
 
     # Build Ubuntu Packages for Launchpad
     cmdBuildUbuntu = parsers.add_parser(
-        "build-ubuntu", help=("Build source packages for Launchpad. Add --sign to sign package.")
+        "build-ubuntu", help="Build source packages for Launchpad. Add --sign to sign package."
     )
     cmdBuildUbuntu.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildUbuntu.add_argument("--build", type=int, help="Set build number.")
