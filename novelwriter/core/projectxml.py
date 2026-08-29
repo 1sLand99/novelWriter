@@ -51,9 +51,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-FILE_VERSION = "1.5"  # The current project file format version
-FILE_REVISION = "7"  # The current project file format revision
-HEX_VERSION = 0x0105  # The current project file format version as hex
+FILE_VERSION = "1.6"  # The current project file format version
+FILE_REVISION = "0"  # The current project file format revision
+HEX_VERSION = 0x0106  # The current project file format version as hex
 LAST_BREAKING = 0x260200B2  # Last project format breaking change (not XML)
 
 NUM_VERSION = {
@@ -62,7 +62,8 @@ NUM_VERSION = {
     "1.2": 0x0102,  # Up to 1.5
     "1.3": 0x0103,  # Up to 2.0 Beta 1
     "1.4": 0x0104,  # Up to 2.0 RC 2
-    "1.5": 0x0105,  # Current
+    "1.5": 0x0105,  # Up to 26.2 RC 1
+    "1.6": 0x0106,  # Current
 }
 
 
@@ -122,6 +123,10 @@ class ProjectXMLReader:
                color attribute (2.8).
         Rev 7: Added projectTarget and dailyTarget nodes to settings,
                and indexRevision attribute to project (26.2).
+
+    1.6 The actual format released for 26.2. All documents are now
+        stored with the .md file extension and a toml header. The
+        project XML was not changed.
     """
 
     def __init__(self, path: str | Path) -> None:
@@ -196,18 +201,18 @@ class ProjectXMLReader:
             return False
 
         fileVersion = str(xRoot.attrib.get("fileVersion", ""))
-        if fileVersion in NUM_VERSION:
-            self._version = NUM_VERSION[fileVersion]
-        else:
-            self._state = XMLReadState.UNKNOWN_VERSION
-            return False
-
         logger.debug("XML is '%s' version '%s'", self._root, fileVersion)
 
         self._revision = checkInt(xRoot.attrib.get("fileRevision"), 0)
         self._appVersion = str(xRoot.attrib.get("appVersion", ""))
         self._hexVersion = hexToInt(xRoot.attrib.get("hexVersion", ""))
         self._timeStamp = str(xRoot.attrib.get("timeStamp", ""))
+
+        if fileVersion in NUM_VERSION:
+            self._version = NUM_VERSION[fileVersion]
+        else:
+            self._state = XMLReadState.UNKNOWN_VERSION
+            return False
 
         for xSection in xRoot:
             if xSection.tag == "project":

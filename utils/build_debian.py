@@ -24,8 +24,12 @@ from __future__ import annotations
 import argparse
 import datetime
 import email.utils
+import os
 import shutil
 import sys
+
+from dataclasses import dataclass
+from pathlib import Path
 
 from utils.common import (
     MIN_PY_VERSION,
@@ -45,7 +49,6 @@ from utils.common import (
 
 SIGN_KEY = "D6A9F6B8F227CF7C6F6D1EE84DBBE4B734B0BD08"
 
-DEB_STABLE = 13
 DEB_CONTROL = f"""
 Source: novelwriter
 Maintainer: Veronica Berglyd Olsen <code@vkbo.net>
@@ -74,14 +77,36 @@ Description: A plain text editor for planning and writing novels
 """
 
 
+@dataclass(frozen=True)
+class DistroTarget:
+    """A single Debian/Ubuntu distro release to build a package for."""
+
+    family: str
+    codename: str
+    numVersion: str
+    debianVersion: int
+    image: str
+    suffix: str
+    oldLicense: bool = False
+
+
+DISTRO_TARGETS: dict[str, DistroTarget] = {
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "bookworm"),
+    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "trixie"),
+    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04", oldLicense=True),
+    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04"),
+    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10"),
+}
+
+
 def makeDebianPackage(
     signKey: str | None = None,
     sourceBuild: bool = False,
     distName: str = "unstable",
     buildName: str = "",
     debianVersion: int = 13,
-    forLaunchpad: bool = False,
     oldLicense: bool = False,
+    prebuiltWheel: Path | None = None,
 ) -> str:
     """Build a Debian package."""
     print("")
@@ -99,15 +124,10 @@ def makeDebianPackage(
     pkgDate = email.utils.format_datetime(relDate.replace(hour=12, tzinfo=None))
     print("")
 
-    pkgDist = ""
-    if forLaunchpad:
-        pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
-    else:
-        pkgVers = numVers
-        if debianVersion < DEB_STABLE:
-            pkgDist = "-oldstable"
-        elif debianVersion > DEB_STABLE:
-            pkgDist = "-testing"
+    # Use a tilde before pre-release identifiers so they sort before the
+    # final release in dpkg/apt version comparisons, regardless of distro.
+    pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
+
     pkgVers = f"{pkgVers}+{buildName}" if buildName else pkgVers
 
     # Set Up Folder
@@ -195,6 +215,18 @@ def makeDebianPackage(
     shutil.copyfile(SETUP_DIR / "description_short.txt", outDir / "data" / "description_short.txt")
     print("Copied: data/description_short.txt")
 
+    # Copy Prebuilt Wheel
+    # ===================
+
+    buildEnv = None
+    if prebuiltWheel is not None:
+        wheelDir = outDir / "dist"
+        wheelDir.mkdir(exist_ok=True)
+        wheelDst = wheelDir / prebuiltWheel.name
+        shutil.copyfile(prebuiltWheel, wheelDst)
+        print(f"Copied: {prebuiltWheel} -> dist/{prebuiltWheel.name}")
+        buildEnv = {**os.environ, "NW_PREBUILT_WHEEL": str(wheelDst)}
+
     # Build Package
     # =============
 
@@ -207,18 +239,20 @@ def makeDebianPackage(
     else:
         signArgs = [f"-k{signKey}"]
 
+    if prebuiltWheel is not None:
+        # Build-Depends are not installed when reusing a prebuilt wheel.
+        signArgs = [*signArgs, "-d"]
+
     if sourceBuild:
-        systemCall(["debuild", "-S", *signArgs], cwd=outDir)
+        systemCall(["debuild", "-S", *signArgs], cwd=outDir, env=buildEnv)
         toUpload(bldDir / f"{bldPkg}.tar.xz")
     else:
-        systemCall(["dpkg-buildpackage", *signArgs], cwd=outDir)
-        shutil.copyfile(bldDir / f"{bldPkg}.tar.xz", bldDir / f"{bldPkg}{pkgDist}.debian.tar.xz")
-        if pkgDist:
-            shutil.copyfile(bldDir / f"{bldPkg}_all.deb", bldDir / f"{bldPkg}{pkgDist}_all.deb")
-        toUpload(bldDir / f"{bldPkg}{pkgDist}.debian.tar.xz")
-        toUpload(bldDir / f"{bldPkg}{pkgDist}_all.deb")
-        toUpload(makeCheckSum(f"{bldPkg}{pkgDist}.debian.tar.xz", cwd=bldDir))
-        toUpload(makeCheckSum(f"{bldPkg}{pkgDist}_all.deb", cwd=bldDir))
+        systemCall(["dpkg-buildpackage", *signArgs], cwd=outDir, env=buildEnv)
+        shutil.copyfile(bldDir / f"{bldPkg}.tar.xz", bldDir / f"{bldPkg}.debian.tar.xz")
+        toUpload(bldDir / f"{bldPkg}.debian.tar.xz")
+        toUpload(bldDir / f"{bldPkg}_all.deb")
+        toUpload(makeCheckSum(f"{bldPkg}.debian.tar.xz", cwd=bldDir))
+        toUpload(makeCheckSum(f"{bldPkg}_all.deb", cwd=bldDir))
 
     print("")
     print("Done!")
@@ -232,13 +266,30 @@ def makeDebianPackage(
 
 
 def debian(args: argparse.Namespace) -> None:
-    """Build a .deb package."""
+    """Build a .deb package for a single distro target."""
     if sys.platform != "linux":
         print("ERROR: Command 'build-deb' can only be used on Linux")
         sys.exit(1)
-    signKey = SIGN_KEY if args.sign else None
-    makeDebianPackage(signKey, debianVersion=12)
-    makeDebianPackage(signKey, debianVersion=13)
+
+    target = DISTRO_TARGETS[args.distro]
+
+    wheel = Path(args.wheel) if args.wheel else None
+    signKey = None if wheel is not None else (SIGN_KEY if args.sign else None)
+
+    buildName = ""
+    if args.with_suffix:
+        bldNum = str(args.build) if args.build else "0"
+        buildName = f"{target.suffix}.{bldNum}"
+
+    makeDebianPackage(
+        signKey,
+        sourceBuild=False,
+        distName=target.codename,
+        buildName=buildName,
+        debianVersion=target.debianVersion,
+        oldLicense=False if wheel is not None else target.oldLicense,
+        prebuiltWheel=wheel,
+    )
 
 
 def launchpad(args: argparse.Namespace) -> None:
@@ -283,7 +334,6 @@ def launchpad(args: argparse.Namespace) -> None:
             distName=codeName,
             buildName=buildName,
             debianVersion=debVer,
-            forLaunchpad=True,
             oldLicense=oldLicense,
         )
         dputCmd.append(dCmd)

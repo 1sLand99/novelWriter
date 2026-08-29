@@ -25,6 +25,18 @@ jobs:
     permissions:
       contents: read
 
+  buildLinux-Wheel:
+    needs: buildAssets
+    uses: ./.github/workflows/part_wheel.yml
+    permissions:
+      contents: read
+
+  buildLinux-Deb:
+    needs: buildLinux-Wheel
+    uses: ./.github/workflows/part_package.yml
+    permissions:
+      contents: read
+
   buildWin-X64:
     needs: buildAssets
     uses: ./.github/workflows/part_win_x64.yml
