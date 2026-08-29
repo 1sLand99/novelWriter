@@ -5,7 +5,7 @@ on:
     inputs:
       publish:
         required: false
-        description: "Publish the built packages to Cloudsmith?"
+        description: "Publish to Cloudsmith?"
         type: boolean
         default: false
 
