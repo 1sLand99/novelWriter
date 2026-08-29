@@ -26,23 +26,18 @@ jobs:
           - codename: bookworm
             family: debian
             image: debian:12
-            qtSvg: false
           - codename: trixie
             family: debian
             image: debian:13
-            qtSvg: true
           - codename: noble
             family: ubuntu
             image: ubuntu:24.04
-            qtSvg: false
           - codename: resolute
             family: ubuntu
             image: ubuntu:26.04
-            qtSvg: true
           - codename: stonking
             family: ubuntu
             image: ubuntu:26.10
-            qtSvg: true
     steps:
       - name: Install Checkout Prerequisites
         run: |
@@ -59,14 +54,7 @@ jobs:
           path: novelwriter/assets
 
       - name: Install Native Packages
-        run: |
-          apt-get install -y dh-python python3-all debhelper pybuild-plugin-pyproject \
-            python3-build python3-setuptools python3-pyqt6 python3-pyqt6.qtsvg python3-enchant \
-            qt6-image-formats-plugins python3-pytest python3-pytestqt python3-pytest-timeout
-
-      - name: Install Qt6 SVG Plugins
-        if: ${{ matrix.qtSvg }}
-        run: apt-get install -y qt6-svg-plugins
+        run: apt-get install -y $(python3 pkgutils.py build-deb-depends ${{ matrix.codename }})
 
       - name: Build Package
         run: python3 pkgutils.py build-deb ${{ matrix.codename }}

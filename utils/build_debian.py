@@ -47,18 +47,28 @@ from utils.common import (
 
 SIGN_KEY = "D6A9F6B8F227CF7C6F6D1EE84DBBE4B734B0BD08"
 
+# Single source of truth for what's needed to build and test the package
+BUILD_DEPENDS = [
+    "dh-python",
+    "pybuild-plugin-pyproject",
+    "python3-build",
+    "python3-setuptools",
+    "python3-all",
+    "debhelper (>= 9)",
+]
+TEST_DEPENDS = [
+    "python3-pytest (>= 6.0)",
+    "python3-pytestqt",
+    "python3-pytest-timeout",
+]
+
 DEB_CONTROL = f"""
 Source: novelwriter
 Maintainer: Veronica Berglyd Olsen <code@vkbo.net>
 Section: text
 Priority: optional
 Build-Depends:
-  dh-python,
-  pybuild-plugin-pyproject,
-  python3-build,
-  python3-setuptools,
-  python3-all,
-  debhelper (>= 9),
+  %build-dependencies%,
   %dependencies%,
   %test-dependencies%
 Standards-Version: 4.5.1
@@ -73,6 +83,20 @@ Depends:
   %dependencies%
 Description: A plain text editor for planning and writing novels
 """
+
+
+def runtimeDepends(debianVersion: int) -> list[str]:
+    """Return the runtime Depends for a given Debian control version."""
+    depend = [
+        f"python3 (>= {MIN_PY_VERSION})",
+        f"python3-pyqt6 (>= {MIN_QT_VERS})",
+        f"python3-pyqt6.qtsvg (>= {MIN_QT_VERS})",
+        "python3-enchant (>= 2.0)",
+        f"qt6-image-formats-plugins (>= {MIN_QT_VERS})",
+    ]
+    if debianVersion > 12:
+        depend.append(f"qt6-svg-plugins (>= {MIN_QT_VERS})")
+    return depend
 
 
 @dataclass(frozen=True)
@@ -95,6 +119,14 @@ DISTRO_TARGETS: dict[str, DistroTarget] = {
     "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04"),
     "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10"),
 }
+
+
+def aptPackages(target: DistroTarget) -> list[str]:
+    """Return the plain apt package names (no version constraints) needed
+    to build and test the Debian package for a given distro target.
+    """
+    entries = [*BUILD_DEPENDS, *runtimeDepends(target.debianVersion), *TEST_DEPENDS]
+    return sorted({entry.split(" ", 1)[0] for entry in entries})
 
 
 def makeDebianPackage(
@@ -172,24 +204,11 @@ def makeDebianPackage(
     shutil.copytree(SETUP_DIR / "debian", debDir)
     print("Copied: debian/*")
 
-    depend = [
-        f"python3 (>= {MIN_PY_VERSION})",
-        f"python3-pyqt6 (>= {MIN_QT_VERS})",
-        f"python3-pyqt6.qtsvg (>= {MIN_QT_VERS})",
-        "python3-enchant (>= 2.0)",
-        f"qt6-image-formats-plugins (>= {MIN_QT_VERS})",
-    ]
-    if debianVersion > 12:
-        depend.append(f"qt6-svg-plugins (>= {MIN_QT_VERS})")
+    depend = runtimeDepends(debianVersion)
 
-    testDepend = [
-        "python3-pytest (>= 6.0)",
-        "python3-pytestqt",
-        "python3-pytest-timeout",
-    ]
-
-    control = DEB_CONTROL.replace("%dependencies%", ",\n  ".join(depend))
-    control = control.replace("%test-dependencies%", ",\n  ".join(testDepend))
+    control = DEB_CONTROL.replace("%build-dependencies%", ",\n  ".join(BUILD_DEPENDS))
+    control = control.replace("%dependencies%", ",\n  ".join(depend))
+    control = control.replace("%test-dependencies%", ",\n  ".join(TEST_DEPENDS))
     writeFile(debDir / "control", control)
     print("Wrote:  debian/control")
 
@@ -244,6 +263,13 @@ def makeDebianPackage(
         return f"dput {ppaName}/{distName} {bldDir}/{bldPkg}_source.changes"
 
     return ""
+
+
+def printDebDepends(args: argparse.Namespace) -> None:
+    """Print the apt packages needed to build and test a .deb for a given
+    distro target, so CI can install them without duplicating this list.
+    """
+    print(" ".join(aptPackages(DISTRO_TARGETS[args.distro])), end=None)
 
 
 def debian(args: argparse.Namespace) -> None:
