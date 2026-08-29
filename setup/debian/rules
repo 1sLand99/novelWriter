@@ -5,13 +5,3 @@ export PYBUILD_TEST_PYTEST=1
 export QT_QPA_PLATFORM=offscreen
 %:
 	dh $@ --with python3 --buildsystem=pybuild
-
-# If NW_PREBUILT_WHEEL is set, reuse that wheel instead of building from
-# source. Used when packaging a wheel already built once with 'uv build' for
-# publishing across multiple distro targets.
-override_dh_auto_build:
-	if [ -n "$$NW_PREBUILT_WHEEL" ]; then \
-		mkdir -p dist && cp "$$NW_PREBUILT_WHEEL" dist/; \
-	else \
-		dh_auto_build; \
-	fi

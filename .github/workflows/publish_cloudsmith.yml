@@ -11,15 +11,9 @@ jobs:
     permissions:
       contents: read
 
-  buildWheel:
-    needs: buildAssets
-    uses: ./.github/workflows/part_wheel.yml
-    permissions:
-      contents: read
-
   buildAndPublish:
-    needs: buildWheel
-    uses: ./.github/workflows/part_package.yml
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
     with:
       publish: true
     secrets: inherit

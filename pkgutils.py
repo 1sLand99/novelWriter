@@ -218,7 +218,6 @@ if __name__ == "__main__":
     )
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildDeb.add_argument("--build", type=int, help="Set build number (used with --with-suffix).")
-    cmdBuildDeb.add_argument("--wheel", help="Package this prebuilt wheel instead of building from source.")
     cmdBuildDeb.add_argument("--with-suffix", action="store_true", help="Tag the version with the distro name.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 

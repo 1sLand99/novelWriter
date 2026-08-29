@@ -24,12 +24,10 @@ from __future__ import annotations
 import argparse
 import datetime
 import email.utils
-import os
 import shutil
 import sys
 
 from dataclasses import dataclass
-from pathlib import Path
 
 from utils.common import (
     MIN_PY_VERSION,
@@ -91,7 +89,7 @@ class DistroTarget:
 
 
 DISTRO_TARGETS: dict[str, DistroTarget] = {
-    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "bookworm"),
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "bookworm", oldLicense=True),
     "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "trixie"),
     "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04", oldLicense=True),
     "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04"),
@@ -106,7 +104,6 @@ def makeDebianPackage(
     buildName: str = "",
     debianVersion: int = 13,
     oldLicense: bool = False,
-    prebuiltWheel: Path | None = None,
 ) -> str:
     """Build a Debian package."""
     print("")
@@ -215,18 +212,6 @@ def makeDebianPackage(
     shutil.copyfile(SETUP_DIR / "description_short.txt", outDir / "data" / "description_short.txt")
     print("Copied: data/description_short.txt")
 
-    # Copy Prebuilt Wheel
-    # ===================
-
-    buildEnv = None
-    if prebuiltWheel is not None:
-        wheelDir = outDir / "dist"
-        wheelDir.mkdir(exist_ok=True)
-        wheelDst = wheelDir / prebuiltWheel.name
-        shutil.copyfile(prebuiltWheel, wheelDst)
-        print(f"Copied: {prebuiltWheel} -> dist/{prebuiltWheel.name}")
-        buildEnv = {**os.environ, "NW_PREBUILT_WHEEL": str(wheelDst)}
-
     # Build Package
     # =============
 
@@ -239,15 +224,11 @@ def makeDebianPackage(
     else:
         signArgs = [f"-k{signKey}"]
 
-    if prebuiltWheel is not None:
-        # Build-Depends are not installed when reusing a prebuilt wheel.
-        signArgs = [*signArgs, "-d"]
-
     if sourceBuild:
-        systemCall(["debuild", "-S", *signArgs], cwd=outDir, env=buildEnv)
+        systemCall(["debuild", "-S", *signArgs], cwd=outDir)
         toUpload(bldDir / f"{bldPkg}.tar.xz")
     else:
-        systemCall(["dpkg-buildpackage", *signArgs], cwd=outDir, env=buildEnv)
+        systemCall(["dpkg-buildpackage", *signArgs], cwd=outDir)
         shutil.copyfile(bldDir / f"{bldPkg}.tar.xz", bldDir / f"{bldPkg}.debian.tar.xz")
         toUpload(bldDir / f"{bldPkg}.debian.tar.xz")
         toUpload(bldDir / f"{bldPkg}_all.deb")
@@ -272,9 +253,7 @@ def debian(args: argparse.Namespace) -> None:
         sys.exit(1)
 
     target = DISTRO_TARGETS[args.distro]
-
-    wheel = Path(args.wheel) if args.wheel else None
-    signKey = None if wheel is not None else (SIGN_KEY if args.sign else None)
+    signKey = SIGN_KEY if args.sign else None
 
     buildName = ""
     if args.with_suffix:
@@ -287,8 +266,7 @@ def debian(args: argparse.Namespace) -> None:
         distName=target.codename,
         buildName=buildName,
         debianVersion=target.debianVersion,
-        oldLicense=False if wheel is not None else target.oldLicense,
-        prebuiltWheel=wheel,
+        oldLicense=target.oldLicense,
     )
 
 
