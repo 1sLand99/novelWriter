@@ -48,6 +48,12 @@ def printVersion(args: argparse.Namespace) -> None:
     print(extractVersion(beQuiet=True)[0], end=None)
 
 
+def printChannel(args: argparse.Namespace) -> None:
+    """Print 'stable' or 'pre' depending on the release channel, and exit."""
+    _, hexVers, _ = extractVersion(beQuiet=True)
+    print("stable" if hexVers[-2] == "f" else "pre", end=None)
+
+
 def cleanBuildDirs(args: argparse.Namespace) -> None:
     """Recursively delete the 'build' and 'dist' folders."""
     print("")
@@ -123,6 +129,10 @@ if __name__ == "__main__":
     # Version
     cmdVersion = parsers.add_parser("version", help="Print the novelWriter version.")
     cmdVersion.set_defaults(func=printVersion)
+
+    # Release Channel
+    cmdChannel = parsers.add_parser("channel", help="Print 'stable' or 'pre' depending on the release channel.")
+    cmdChannel.set_defaults(func=printChannel)
 
     # Additional Builds
     # =================
