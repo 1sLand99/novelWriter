@@ -1,6 +1,13 @@
-name: PublishCloudsmith
+name: Publish-Cloudsmith
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        required: false
+        description: "Publish to Cloudsmith?"
+        type: boolean
+        default: false
 
 jobs:
   buildAssets:
@@ -11,17 +18,11 @@ jobs:
     permissions:
       contents: read
 
-  buildWheel:
-    needs: buildAssets
-    uses: ./.github/workflows/part_wheel.yml
-    permissions:
-      contents: read
-
   buildAndPublish:
-    needs: buildWheel
-    uses: ./.github/workflows/part_package.yml
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
     with:
-      publish: true
+      publish: ${{ inputs.publish }}
     secrets: inherit
     permissions:
       contents: read
