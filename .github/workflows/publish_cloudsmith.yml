@@ -1,6 +1,12 @@
 name: PublishCloudsmith
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   buildAssets:
@@ -15,7 +21,7 @@ jobs:
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
-      publish: true
+      publish: inputs.publish
     secrets: inherit
     permissions:
       contents: read
