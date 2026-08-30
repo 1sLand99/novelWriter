@@ -66,6 +66,7 @@ jobs:
     secrets: inherit
     if: ${{ inputs.debian12 }}
     permissions:
+      id-token: write
       contents: read
 
   buildAndPublish-Debian13:
@@ -81,6 +82,7 @@ jobs:
     secrets: inherit
     if: ${{ inputs.debian13 }}
     permissions:
+      id-token: write
       contents: read
 
   buildAndPublish-Ubuntu2404:
@@ -96,6 +98,7 @@ jobs:
     secrets: inherit
     if: ${{ inputs.ubuntu2404 }}
     permissions:
+      id-token: write
       contents: read
 
   buildAndPublish-Ubuntu2604:
@@ -111,6 +114,7 @@ jobs:
     secrets: inherit
     if: ${{ inputs.ubuntu2604 }}
     permissions:
+      id-token: write
       contents: read
 
   buildAndPublish-Ubuntu2610:
@@ -126,6 +130,7 @@ jobs:
     secrets: inherit
     if: ${{ inputs.ubuntu2610 }}
     permissions:
+      id-token: write
       contents: read
 
   buildAndPublish-Mint22:
@@ -141,4 +146,5 @@ jobs:
     secrets: inherit
     if: ${{ inputs.mint22 }}
     permissions:
+      id-token: write
       contents: read
