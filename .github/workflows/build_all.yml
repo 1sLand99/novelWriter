@@ -25,12 +25,6 @@ jobs:
     permissions:
       contents: read
 
-  buildLinux-Deb:
-    needs: buildAssets
-    uses: ./.github/workflows/part_debian.yml
-    permissions:
-      contents: read
-
   buildWin-X64:
     needs: buildAssets
     uses: ./.github/workflows/part_win_x64.yml

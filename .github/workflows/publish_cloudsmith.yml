@@ -8,6 +8,31 @@ on:
         description: "Publish to Cloudsmith?"
         type: boolean
         default: false
+      debian12:
+        required: false
+        description: "Debian 12 (Bookworm)"
+        type: boolean
+        default: true
+      debian13:
+        required: false
+        description: "Debian 13 (Trixie)"
+        type: boolean
+        default: true
+      ubuntu2404:
+        required: false
+        description: "Ubuntu 24.04 (Noble)"
+        type: boolean
+        default: true
+      ubuntu2604:
+        required: false
+        description: "Ubuntu 26.04 (Resolute)"
+        type: boolean
+        default: true
+      ubuntu2610:
+        required: false
+        description: "Ubuntu 26.10 (Stonking)"
+        type: boolean
+        default: true
 
 jobs:
   buildAssets:
@@ -18,11 +43,67 @@ jobs:
     permissions:
       contents: read
 
-  buildAndPublish:
+  buildAndPublish-Debian12:
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      codename: bookworm
+      family: debian
+      image: debian:12
     secrets: inherit
+    if: ${{ inputs.debian12 }}
+    permissions:
+      contents: read
+
+  buildAndPublish-Debian13:
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
+    with:
+      publish: ${{ inputs.publish }}
+      codename: trixie
+      family: debian
+      image: debian:13
+    secrets: inherit
+    if: ${{ inputs.debian13 }}
+    permissions:
+      contents: read
+
+  buildAndPublish-Ubuntu2404:
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
+    with:
+      publish: ${{ inputs.publish }}
+      codename: noble
+      family: ubuntu
+      image: ubuntu:24.04
+    secrets: inherit
+    if: ${{ inputs.ubuntu2404 }}
+    permissions:
+      contents: read
+
+  buildAndPublish-Ubuntu2604:
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
+    with:
+      publish: ${{ inputs.publish }}
+      codename: resolute
+      family: ubuntu
+      image: ubuntu:26.04
+    secrets: inherit
+    if: ${{ inputs.ubuntu2604 }}
+    permissions:
+      contents: read
+
+  buildAndPublish-Ubuntu2610:
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
+    with:
+      publish: ${{ inputs.publish }}
+      codename: stonking
+      family: ubuntu
+      image: ubuntu:26.10
+    secrets: inherit
+    if: ${{ inputs.ubuntu2610 }}
     permissions:
       contents: read
