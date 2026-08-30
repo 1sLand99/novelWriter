@@ -16,6 +16,10 @@ on:
       image:
         required: true
         type: string
+      build_number:
+        required: false
+        type: string
+        default: "0"
     secrets:
       CLOUDSMITH_API_KEY:
         required: false
@@ -25,6 +29,7 @@ jobs:
     name: Build Debian Package
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: read
     container:
       image: ${{ inputs.image }}
@@ -47,7 +52,7 @@ jobs:
         run: apt-get install -y $(python3 pkgutils.py build-deb-depends ${{ inputs.codename }})
 
       - name: Build Package
-        run: python3 pkgutils.py build-deb ${{ inputs.codename }}
+        run: python3 pkgutils.py build-deb ${{ inputs.codename }} --build ${{ inputs.build_number }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7
@@ -57,17 +62,20 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Set up Cloudsmith CLI with OIDC
+        if: ${{ inputs.publish }}
+        uses: cloudsmith-io/cloudsmith-cli-action@v3
+        with:
+          oidc-namespace: "saga-soft"
+          oidc-service-slug: "github-actions-lcpr"
+
       - name: Publish to Cloudsmith
         if: ${{ inputs.publish }}
-        env:
-          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
-          apt-get install -y python3-pip
-          pip install --break-system-packages --ignore-installed cloudsmith-cli
           CHANNEL="$(python3 pkgutils.py channel)"
-          REPO="saga-soft/stable"
+          REPO="stable"
           if [ "$CHANNEL" = "pre" ]; then
-            REPO="saga-soft/testing"
+            REPO="testing"
           fi
           DEB_FILE="$(find dist_upload -name '*.deb')"
-          cloudsmith push deb "$REPO/${{ inputs.family }}/${{ inputs.codename }}" "$DEB_FILE" --api-key "$CLOUDSMITH_API_KEY" --republish
+          cloudsmith push deb "saga-soft/$REPO/${{ inputs.family }}/${{ inputs.codename }}" "$DEB_FILE" --republish

@@ -8,6 +8,11 @@ on:
         description: "Publish to Cloudsmith?"
         type: boolean
         default: false
+      build_number:
+        required: false
+        description: "Build Number"
+        type: string
+        default: "0"
       debian12:
         required: false
         description: "Debian 12 (Bookworm)"
@@ -54,6 +59,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: bookworm
       family: debian
       image: debian:12
@@ -68,6 +74,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: trixie
       family: debian
       image: debian:13
@@ -82,6 +89,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: noble
       family: ubuntu
       image: ubuntu:24.04
@@ -96,6 +104,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: resolute
       family: ubuntu
       image: ubuntu:26.04
@@ -110,6 +119,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: stonking
       family: ubuntu
       image: ubuntu:26.10
@@ -124,6 +134,7 @@ jobs:
     uses: ./.github/workflows/part_debian.yml
     with:
       publish: ${{ inputs.publish }}
+      build_number: ${{ inputs.build_number }}
       codename: wilma
       family: linuxmint
       image: linuxmintd/mint22-amd64

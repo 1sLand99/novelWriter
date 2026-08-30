@@ -135,8 +135,7 @@ def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bo
     print("")
     print("Build Debian Package")
     print("====================")
-    print("On Debian/Ubuntu install: dh-python python3-all debhelper devscripts ")
-    print("                          pybuild-plugin-pyproject")
+    print(f"Target: {target.family.title()} {target.numVersion} {target.codename.title()}")
     print("")
 
     # Version Info
