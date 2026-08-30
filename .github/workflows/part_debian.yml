@@ -22,7 +22,7 @@ on:
 
 jobs:
   buildPackage:
-    name: Build Debian Package (${{ inputs.codename }})
+    name: Build Debian Package
     runs-on: ubuntu-latest
     permissions:
       contents: read

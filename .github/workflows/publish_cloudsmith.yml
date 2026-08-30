@@ -49,6 +49,7 @@ jobs:
       contents: read
 
   buildAndPublish-Debian12:
+    name: Build for Debian 12 (Bookworm)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
@@ -62,6 +63,7 @@ jobs:
       contents: read
 
   buildAndPublish-Debian13:
+    name: Build for Debian 13 (Trixie)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
@@ -75,6 +77,7 @@ jobs:
       contents: read
 
   buildAndPublish-Ubuntu2404:
+    name: Build for Ubuntu 24.04 (Noble)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
@@ -88,6 +91,7 @@ jobs:
       contents: read
 
   buildAndPublish-Ubuntu2604:
+    name: Build for Ubuntu 26.04 (Resolute)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
@@ -101,6 +105,7 @@ jobs:
       contents: read
 
   buildAndPublish-Ubuntu2610:
+    name: Build for Ubuntu 26.10 (Stonking)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:
@@ -114,6 +119,7 @@ jobs:
       contents: read
 
   buildAndPublish-Mint22:
+    name: Build for Linux Mint 22 (Wilma)
     needs: buildAssets
     uses: ./.github/workflows/part_debian.yml
     with:

@@ -118,7 +118,7 @@ DISTRO_TARGETS: dict[str, DistroTarget] = {
     "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu24.04.", date(2029, 5, 1), old=True),
     "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu26.04.", date(2031, 5, 1)),
     "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu26.10.", date(2027, 7, 1)),
-    "wilma": DistroTarget("linuxmint", "wilma", "22", 12, "mint22.", date(2029, 5, 1)),
+    "wilma": DistroTarget("linuxmint", "wilma", "22", 12, "mint22.", date(2029, 5, 1), old=True),
 }
 
 
