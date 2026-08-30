@@ -107,19 +107,18 @@ class DistroTarget:
     codename: str
     numVersion: str
     debianVersion: int
-    image: str
     suffix: str
     eol: date
     old: bool = False
 
 
 DISTRO_TARGETS: dict[str, DistroTarget] = {
-    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "debian:12", "deb12u", date(2028, 6, 30), old=True),
-    "trixie": DistroTarget("debian", "trixie", "13", 13, "debian:13", "deb13u", date(2030, 6, 30)),
-    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu:24.04", "ubuntu24.04.", date(2029, 5, 1), old=True),
-    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu:26.04", "ubuntu26.04.", date(2031, 5, 1)),
-    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu:26.10", "ubuntu26.10.", date(2027, 7, 1)),
-    "wilma": DistroTarget("linuxmint", "wilma", "22", 12, "linuxmintd/mint22-amd64", "mint22.", date(2029, 5, 1)),
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "deb12u", date(2028, 6, 30), old=True),
+    "trixie": DistroTarget("debian", "trixie", "13", 13, "deb13u", date(2030, 6, 30)),
+    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu24.04.", date(2029, 5, 1), old=True),
+    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu26.04.", date(2031, 5, 1)),
+    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu26.10.", date(2027, 7, 1)),
+    "wilma": DistroTarget("linuxmint", "wilma", "22", 12, "mint22.", date(2029, 5, 1)),
 }
 
 

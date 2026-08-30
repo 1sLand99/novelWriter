@@ -33,6 +33,11 @@ on:
         description: "Ubuntu 26.10 (Stonking)"
         type: boolean
         default: true
+      mint22:
+        required: false
+        description: "Linux Mint 22 (Wilma)"
+        type: boolean
+        default: true
 
 jobs:
   buildAssets:
@@ -105,5 +110,18 @@ jobs:
       image: ubuntu:26.10
     secrets: inherit
     if: ${{ inputs.ubuntu2610 }}
+    permissions:
+      contents: read
+
+  buildAndPublish-Mint22:
+    needs: buildAssets
+    uses: ./.github/workflows/part_debian.yml
+    with:
+      publish: ${{ inputs.publish }}
+      codename: wilma
+      family: linuxmint
+      image: linuxmintd/mint22-amd64
+    secrets: inherit
+    if: ${{ inputs.mint22 }}
     permissions:
       contents: read
