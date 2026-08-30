@@ -11,8 +11,8 @@ on:
       build_number:
         required: false
         description: "Build Number"
-        type: number
-        default: 0
+        type: string
+        default: "0"
       debian12:
         required: false
         description: "Debian 12 (Bookworm)"
