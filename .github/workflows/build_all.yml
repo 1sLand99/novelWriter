@@ -1,4 +1,4 @@
-name: BuildAll
+name: Build All
 
 on: workflow_dispatch
 
@@ -22,12 +22,6 @@ jobs:
     needs: buildAssets
     uses: ./.github/workflows/part_flatpak.yml
     secrets: inherit
-    permissions:
-      contents: read
-
-  buildLinux-Deb:
-    needs: buildAssets
-    uses: ./.github/workflows/part_debian.yml
     permissions:
       contents: read
 
