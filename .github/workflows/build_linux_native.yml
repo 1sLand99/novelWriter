@@ -1,4 +1,4 @@
-name: Publish-Cloudsmith
+name: Build Linux Native
 
 on:
   workflow_dispatch:
