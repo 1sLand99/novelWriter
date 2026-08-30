@@ -90,11 +90,11 @@ jobs:
           export QT_QPA_PLATFORM=offscreen
           python3 -m pytest -v --timeout=60
 
-  testFedoraRawhide:
-    name: Test Fedora Rawhide & Sys Packages
+  testFedoraLatest:
+    name: Test Fedora 44 & Sys Packages
     runs-on: ubuntu-latest
     container:
-      image: fedora:rawhide
+      image: fedora:44
     permissions:
       contents: read
     steps:
