@@ -54,8 +54,8 @@ lint = ["pyright", "ruff"]
 [project.urls]
 Homepage = "https://novelwriter.io"
 Documentation = "https://docs.novelwriter.io"
-Repository = "https://github.com/vkbo/novelWriter"
-Issues = "https://github.com/vkbo/novelWriter/issues"
+Repository = "https://github.com/saga-soft/novelWriter"
+Issues = "https://github.com/saga-soft/novelWriter/issues"
 
 [project.gui-scripts]
 novelwriter = "novelwriter:main"
