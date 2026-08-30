@@ -7,6 +7,10 @@ on:
         required: false
         type: boolean
         default: false
+      build_number:
+        required: false
+        type: number
+        default: 0
       codename:
         required: true
         type: string
@@ -16,10 +20,6 @@ on:
       image:
         required: true
         type: string
-      build_number:
-        required: false
-        type: string
-        default: "0"
     secrets:
       CLOUDSMITH_API_KEY:
         required: false
