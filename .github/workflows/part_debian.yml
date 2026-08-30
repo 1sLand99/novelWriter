@@ -67,7 +67,8 @@ jobs:
         uses: cloudsmith-io/cloudsmith-cli-action@v3
         with:
           oidc-namespace: "saga-soft"
-          oidc-service-slug: "github-actions-lcpr"
+          oidc-service-slug: "@github-actions-lcpr"
+          verify-auth: true
 
       - name: Publish to Cloudsmith
         if: ${{ inputs.publish }}
