@@ -199,7 +199,7 @@ jobs:
           fi
 
   testUbuntu24:
-    name: Test Ubuntu 24.04 & Sys Packages
+    name: Ubuntu 24.04 & Sys Packages
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -229,7 +229,7 @@ jobs:
           python3 -m pytest -v --timeout=60
 
   testFedoraLatest:
-    name: Test Fedora 44 & Sys Packages
+    name: Fedora 44 & Sys Packages
     runs-on: ubuntu-latest
     container:
       image: fedora:44
