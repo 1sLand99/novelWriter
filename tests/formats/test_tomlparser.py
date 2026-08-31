@@ -51,7 +51,7 @@ def testTomlParser_NTomlParser(fncPath):
             "list2 = [17, 18, 19]\n"
             "float1 = 4.2\n"
             'enum1 = "NOVEL"\n'
-            f'path1 = "{fncPath}"\n'
+            f'path1 = "{fncPath.as_posix()}"\n'
         ),
     )
 

@@ -6,3 +6,6 @@ export QT_QPA_PLATFORM=offscreen
 export PYTEST_ADDOPTS=--import-mode=prepend
 %:
 	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_gencontrol:
+	dh_gencontrol -- -DLicense=GPL-3.0-or-later
