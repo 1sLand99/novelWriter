@@ -5,6 +5,7 @@
 [![MacOS](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml)
 [![Linting](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml)
 [![CodeCov](https://codecov.io/gh/saga-soft/novelWriter/branch/main/graph/badge.svg)](https://codecov.io/gh/saga-soft/novelWriter)
+[![Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat&link=https%3A%2F%2Fcloudsmith.com)](https://cloudsmith.com)
 
 <img align="left" style="margin: 0 0 4px 0;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/novelwriter_readme.png">
 
@@ -27,12 +28,16 @@ documentation.
 
 _This project is developed and maintained with care by actual humans._
 
-## Sponsors
+## Sponsors & Attribution
 
 <table style="border: none;">
 <tr>
-  <td><img align="left" style="height: 25px;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/signpath_logo.png"></td>
+  <td><img align="left" style="width: 25px;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/signpath_logo.png"></td>
   <td>Free code signing on Windows provided by <a href="https://about.signpath.io/">SignPath.io</a>, certificate by <a href="https://signpath.org/">SignPath Foundation</a>.</td>
+</tr>
+<tr>
+  <td><img align="left" style="width: 25px;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/cloudsmith_logo.png"></td>
+  <td>Package repository hosting is graciously provided for free by <a href="https://cloudsmith.com">Cloudsmith</a>.</td>
 </tr>
 </table>
 
