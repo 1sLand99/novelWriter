@@ -46,8 +46,8 @@ PIP_GEN_COMMIT = "737c0085912f9f7dabf9341d4608e2a77a51a73a"
 PIP_GEN_FILE = "pip/flatpak-pip-generator.py"
 PIP_GEN_URL = f"https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/{PIP_GEN_COMMIT}/{PIP_GEN_FILE}"
 ENCHANT_RELEASE_API = "https://api.github.com/repos/rrthomas/enchant/releases/tags/v{version}"
-NW_REPO_URL = "https://github.com/vkbo/novelWriter.git"
-NW_COMMIT_API = "https://api.github.com/repos/vkbo/novelWriter/commits/v{version}"
+NW_REPO_URL = "https://github.com/saga-soft/novelWriter.git"
+NW_COMMIT_API = "https://api.github.com/repos/saga-soft/novelWriter/commits/v{version}"
 FLATHUB_FILES = ("io.novelwriter.novelwriter.yml", "pypi-deps.json", "enchant.json", "novelwriter.appdata.xml")
 
 

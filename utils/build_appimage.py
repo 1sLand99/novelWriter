@@ -151,7 +151,7 @@ def appImage(args: argparse.Namespace) -> None:
             appToolExec,
             "--no-appstream",
             "--updateinformation",
-            f"gh-releases-zsync|vkbo|novelwriter|latest|novelwriter-*-{mArch}.AppImage.zsync",
+            f"gh-releases-zsync|saga-soft|novelwriter|latest|novelwriter-*-{mArch}.AppImage.zsync",
             str(appDir),
             bldImg,
         ],
