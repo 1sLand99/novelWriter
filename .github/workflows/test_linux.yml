@@ -24,6 +24,8 @@ jobs:
     name: Test Python ${{ matrix.python-version }}
     permissions:
       contents: read
+    env:
+      COVERAGE_FILE: .coverage.py${{ matrix.python-version }}
     steps:
       - name: Checkout Source
         uses: actions/checkout@v7
@@ -54,6 +56,64 @@ jobs:
           uv run --no-sync coverage run -m pytest -v --timeout=60
           uv run --no-sync coverage xml
           uv run --no-sync coverage report --skip-covered
+
+      - name: Upload Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data-py${{ matrix.python-version }}
+          path: ${{ env.COVERAGE_FILE }}
+          include-hidden-files: true
+          retention-days: 1
+
+  coverageReport:
+    name: Coverage Report
+    needs: testLinux
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v7
+
+      - name: Download Coverage Data
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-data-py*
+          merge-multiple: true
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v8.2.0
+
+      - name: Combine Coverage Data
+        run: |
+          uvx coverage combine
+          uvx coverage report --skip-covered
+
+      - name: Build Comment Body
+        run: |
+          {
+            echo '<!-- coverage-report -->'
+            echo '### Coverage Report (Linux)'
+            echo
+            uvx coverage report --skip-covered --show-missing --format=markdown --precision=3
+            echo
+            echo "**Total: $(uvx coverage report --format=total --precision=3)%**"
+          } > coverage-comment.md
+
+      - name: Post PR Comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          comment_id=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate --jq '.[] | select(.body | startswith("<!-- coverage-report -->")) | .id' | head -n1)
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH "repos/$REPO/issues/comments/$comment_id" -f body=@coverage-comment.md
+          else
+            gh pr comment "$PR_NUMBER" --body-file coverage-comment.md
+          fi
 
   testUbuntu24:
     name: Test Ubuntu 24.04 & Sys Packages
