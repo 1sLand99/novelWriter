@@ -1,8 +1,6 @@
 # novelWriter
 
-[![Linux](https://github.com/saga-soft/novelWriter/actions/workflows/test_linux.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_linux.yml)
-[![Windows](https://github.com/saga-soft/novelWriter/actions/workflows/test_win.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_win.yml)
-[![MacOS](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml)
+[![Tests](https://github.com/saga-soft/novelWriter/actions/workflows/tests.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/tests.yml)
 [![Linting](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml)
 [![Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat&link=https%3A%2F%2Fcloudsmith.com)](https://cloudsmith.com)
 
