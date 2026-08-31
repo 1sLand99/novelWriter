@@ -4,7 +4,6 @@
 [![Windows](https://github.com/saga-soft/novelWriter/actions/workflows/test_win.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_win.yml)
 [![MacOS](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/test_mac.yml)
 [![Linting](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml/badge.svg)](https://github.com/saga-soft/novelWriter/actions/workflows/syntax.yml)
-[![CodeCov](https://codecov.io/gh/saga-soft/novelWriter/branch/main/graph/badge.svg)](https://codecov.io/gh/saga-soft/novelWriter)
 [![Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat&link=https%3A%2F%2Fcloudsmith.com)](https://cloudsmith.com)
 
 <img align="left" style="margin: 0 0 4px 0;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/novelwriter_readme.png">
