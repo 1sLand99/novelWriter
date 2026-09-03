@@ -554,10 +554,10 @@ class Config:
             self.guiFont = fontMatcher(font)
         else:
             font = QFont()
-            if self.osWindows and "Arial" in QFontDatabase.families():
+            if self.osWindows and "Segoe UI" in QFontDatabase.families():
                 # On Windows we default to Arial if possible
-                font.setFamily("Arial")
-                font.setPointSize(10)
+                font.setFamily("Segoe UI")
+                font.setPointSize(9)
             else:
                 font = QFontDatabase.systemFont(QFontDatabase.SystemFont.GeneralFont)
             self.guiFont = fontMatcher(font)
@@ -579,9 +579,9 @@ class Config:
             self.textFont = fontMatcher(font)
         else:
             fontFam = QFontDatabase.families()
-            if self.osWindows and "Arial" in fontFam:
+            if self.osWindows and "Segoe UI" in fontFam:
                 font = QFont()
-                font.setFamily("Arial")
+                font.setFamily("Segoe UI")
                 font.setPointSize(12)
             elif self.osDarwin and "Helvetica" in fontFam:
                 font = QFont()
