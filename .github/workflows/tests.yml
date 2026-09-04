@@ -114,6 +114,9 @@ jobs:
       contents: read
     env:
       COVERAGE_FILE: .coverage.win
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Source
         uses: actions/checkout@v7
