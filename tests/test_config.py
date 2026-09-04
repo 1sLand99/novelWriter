@@ -281,12 +281,12 @@ def testConfig_Fonts(monkeypatch, fncPath):
 
     with monkeypatch.context() as mp:
         mp.setattr(conf, "osWindows", True)
-        mp.setattr(QFontDatabase, "families", lambda *a: ["Arial"])
+        mp.setattr(QFontDatabase, "families", lambda *a: ["Segoe UI"])
         conf.setGuiFont(None)
-        assert conf.guiFont.family() == "Arial"
+        assert conf.guiFont.family() == "Segoe UI"
 
         conf.setTextFont(None)
-        assert conf.textFont.family() == "Arial"
+        assert conf.textFont.family() == "Segoe UI"
 
     with monkeypatch.context() as mp:
         mp.setattr(conf, "osDarwin", True)
