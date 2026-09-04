@@ -2977,6 +2977,32 @@ def testGuiDocEditor_InsertFromMimeData_Markdown(qtbot, nwGUI, projPath, mockRnd
 
 
 @pytest.mark.gui
+def testGuiDocEditor_PasteAsPlainText(qtbot, nwGUI, projPath, mockRnd):
+    """Test that the Ctrl+Shift+V shortcut always inserts the
+    clipboard's plain text, ignoring any HTML or Markdown formatting
+    also present on the clipboard.
+    """
+    buildTestProject(NWProject(), projPath)
+    nwGUI.openProject(projPath)
+    docEditor = nwGUI.docEditor
+    assert docEditor.loadText(C.hSceneDoc) is True
+    docEditor.setCursorPosition(0)
+
+    clipboard = QApplication.clipboard()
+    assert clipboard is not None
+    clipboard.clear()
+
+    mime = QMimeData()
+    mime.setHtml("<p><b>Bold</b> text.</p>")
+    mime.setText("Plain text.")
+    clipboard.setMimeData(mime)
+
+    docEditor._pasteAsPlainText()
+
+    assert docEditor.getText().startswith("Plain text.")
+
+
+@pytest.mark.gui
 def testGuiDocEditor_LineHeightDoubleReturn(qtbot, nwGUI, projPath, mockRnd):
     """Test that a blank-line paragraph break (two consecutive Return
     presses) works normally with a non-default line height set on

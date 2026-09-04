@@ -39,7 +39,7 @@ from novelwriter.constants import nwConst
 
 logger = logging.getLogger(__name__)
 
-API_URL = "https://api.github.com/repos/vkbo/novelwriter/releases/latest"
+API_URL = "https://api.github.com/repos/saga-soft/novelwriter/releases/latest"
 
 
 class VersionInfoWidget(QWidget):

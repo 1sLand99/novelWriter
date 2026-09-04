@@ -48,6 +48,12 @@ def printVersion(args: argparse.Namespace) -> None:
     print(extractVersion(beQuiet=True)[0], end=None)
 
 
+def printChannel(args: argparse.Namespace) -> None:
+    """Print 'stable' or 'pre' depending on the release channel, and exit."""
+    _, hexVers, _ = extractVersion(beQuiet=True)
+    print("stable" if hexVers[-2] == "f" else "pre", end=None)
+
+
 def cleanBuildDirs(args: argparse.Namespace) -> None:
     """Recursively delete the 'build' and 'dist' folders."""
     print("")
@@ -124,6 +130,10 @@ if __name__ == "__main__":
     cmdVersion = parsers.add_parser("version", help="Print the novelWriter version.")
     cmdVersion.set_defaults(func=printVersion)
 
+    # Release Channel
+    cmdChannel = parsers.add_parser("channel", help="Print 'stable' or 'pre' depending on the release channel.")
+    cmdChannel.set_defaults(func=printChannel)
+
     # Additional Builds
     # =================
 
@@ -196,15 +206,23 @@ if __name__ == "__main__":
     # ================
 
     # Build Debian Package
+    distros = ", ".join(utils.build_debian.DISTRO_TARGETS.keys())
     cmdBuildDeb = parsers.add_parser(
-        "build-deb", help=("Build a .deb package for Debian and Ubuntu. Add --sign to sign package.")
+        "build-deb", help="Build .deb packages for publishing. Add --sign to sign package."
     )
+    cmdBuildDeb.add_argument("distro", help=f"Release to build for: {distros}.")
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
+    cmdBuildDeb.add_argument("--build", type=int, help="Set build number, appended to the distro suffix.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 
-    # Build Ubuntu Packages
+    # Print Debian Build Dependencies
+    cmdDebDepends = parsers.add_parser("build-deb-depends", help="Print the apt package dependencies.")
+    cmdDebDepends.add_argument("distro", help=f"Release to build for: {distros}.")
+    cmdDebDepends.set_defaults(func=utils.build_debian.printDebDepends)
+
+    # Build Ubuntu Packages for Launchpad
     cmdBuildUbuntu = parsers.add_parser(
-        "build-ubuntu", help=("Build a .deb package for Debian and Ubuntu. Add --sign to sign package.")
+        "build-ubuntu", help="Build source packages for Launchpad. Add --sign to sign package."
     )
     cmdBuildUbuntu.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildUbuntu.add_argument("--build", type=int, help="Set build number.")

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<novelWriterXML appVersion="26.2rc1" hexVersion="0x260200c1" fileVersion="1.6" fileRevision="0" timeStamp="2026-08-29 13:56:27">
-  <project id="e2be99af-f9bf-4403-857a-c3d1ac25abea" saveCount="2392" autoCount="430" editTime="111200" indexRevision="90">
+<novelWriterXML appVersion="26.2rc1" hexVersion="0x260200c1" fileVersion="1.6" fileRevision="0" timeStamp="2026-07-20 17:28:47">
+  <project id="d0f3fe10-c6e6-4310-8bfd-181eb4224eed" saveCount="2369" autoCount="429" editTime="1000" indexRevision="0">
     <name>Sample Project</name>
     <author>Jane Smith</author>
   </project>
@@ -8,8 +8,8 @@
     <doBackup>no</doBackup>
     <language>en_GB</language>
     <spellChecking auto="yes">None</spellChecking>
-    <projectTarget date="None" last="1137" mode="words">15000</projectTarget>
-    <dailyTarget auto="no" last="0" date="2026-08-29">1000</dailyTarget>
+    <projectTarget date="2026-08-20" last="0" mode="words">100000</projectTarget>
+    <dailyTarget auto="no" last="0" date="2026-07-20">1000</dailyTarget>
     <targetSkipRoots>
       <entry>d2d81f4831814</entry>
     </targetSkipRoots>
@@ -25,21 +25,21 @@
       <entry key="C">D</entry>
     </autoReplace>
     <status>
-      <entry key="sf12341" count="7" color="#969896" shape="STAR">New</entry>
-      <entry key="sf24ce6" count="2" color="red" shape="STAR">Notes</entry>
-      <entry key="sc24b8f" count="2" color="yellow" shape="BARS_1">Started</entry>
-      <entry key="s90e6c9" count="5" color="yellow" shape="BARS_2">1st Draft</entry>
-      <entry key="sd51c5b" count="2" color="yellow" shape="BARS_3">2nd Draft</entry>
-      <entry key="s8ae72a" count="0" color="yellow" shape="BARS_4">3rd Draft</entry>
-      <entry key="s78ea90" count="1" color="green" shape="STAR">Finished</entry>
-      <entry key="s936325" count="7" color="blue" shape="DIAMOND">Sample</entry>
+      <entry key="sf12341" count="7" color="#646464" shape="STAR">New</entry>
+      <entry key="sf24ce6" count="2" color="#c83200" shape="STAR">Notes</entry>
+      <entry key="sc24b8f" count="2" color="#b63c00" shape="BARS_1">Started</entry>
+      <entry key="s90e6c9" count="5" color="#c18100" shape="BARS_2">1st Draft</entry>
+      <entry key="sd51c5b" count="2" color="#c18100" shape="BARS_3">2nd Draft</entry>
+      <entry key="s8ae72a" count="0" color="#c18100" shape="BARS_4">3rd Draft</entry>
+      <entry key="s78ea90" count="1" color="#3ab43a" shape="STAR">Finished</entry>
+      <entry key="s936325" count="7" color="#0000c1" shape="DIAMOND">Sample</entry>
     </status>
     <importance>
-      <entry key="ia857f0" count="7" color="faded" shape="STAR">None</entry>
-      <entry key="i4a1d39" count="1" color="purple" shape="BLOCK_1">Background</entry>
-      <entry key="icfb3a5" count="1" color="purple" shape="BLOCK_2">Minor</entry>
-      <entry key="i2d7a54" count="2" color="purple" shape="BLOCK_3">Major</entry>
-      <entry key="i56be10" count="1" color="purple" shape="BLOCK_4">Main</entry>
+      <entry key="ia857f0" count="7" color="#646464" shape="STAR">None</entry>
+      <entry key="i4a1d39" count="1" color="#dc8add" shape="BLOCK_1">Background</entry>
+      <entry key="icfb3a5" count="1" color="#dc8add" shape="BLOCK_2">Minor</entry>
+      <entry key="i2d7a54" count="2" color="#dc8add" shape="BLOCK_3">Major</entry>
+      <entry key="i56be10" count="1" color="#dc8add" shape="BLOCK_4">Main</entry>
     </importance>
   </settings>
   <content items="38" novelWords="5561" notesWords="601" novelChars="29419" notesChars="3295">

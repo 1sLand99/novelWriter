@@ -134,6 +134,7 @@ Other Editor Shortcuts
    ":kbd:`Ctrl+Return`",       "Open the tag or reference under the cursor in the viewer"
    ":kbd:`Ctrl+Shift+Return`", "Open the tag or reference under the cursor in the editor"
    ":kbd:`Ctrl+Shift+A`",      "Select all text in the current paragraph"
+   ":kbd:`Ctrl+Shift+V`",      "Paste text as plain text from clipboard to cursor position"
    ":kbd:`Ctrl+Left`",         "Move to previous word."
    ":kbd:`Ctrl+Right`",        "Move to next word."
    ":kbd:`Ctrl+Up`",           "Move to previous paragraph."

@@ -384,6 +384,11 @@ class GuiDocEditor(QTextEdit):
         self._followTagEdit.setContext(QtWidgetShortcut)
         self._followTagEdit.activated.connect(qtWeakLambda(self._processTag, edit=True))
 
+        self._pastePlainText = QShortcut(self)
+        self._pastePlainText.setKeys(["Ctrl+Shift+V"])
+        self._pastePlainText.setContext(QtWidgetShortcut)
+        self._pastePlainText.activated.connect(self._pasteAsPlainText)
+
         self._prevLine = QShortcut(self)
         self._prevLine.setKey("Ctrl+Up")
         self._prevLine.setContext(QtWidgetShortcut)
@@ -1451,16 +1456,7 @@ class GuiDocEditor(QTextEdit):
         else:
             return
 
-        if text:
-            # Ensures line height is applied, see #2874
-            logger.debug("Inserted text into document")
-            cursor = self.textCursor()
-            cursor.beginEditBlock()
-            cursor.insertText(text)
-            cursor.endEditBlock()
-            self.setTextCursor(cursor)
-            # Deferred to avoid re-entrancy, see #2917
-            QTimer.singleShot(0, lambda: self.ensureCursorVisible(centre=False))
+        self._insertPlainText(text)
 
     ##
     #  Public Slots
@@ -1517,6 +1513,12 @@ class GuiDocEditor(QTextEdit):
     ##
     #  Private Slots
     ##
+
+    @pyqtSlot()
+    def _pasteAsPlainText(self) -> None:
+        """Paste the clipboard's plain text content."""
+        if clipboard := QApplication.clipboard():  # pragma: no branch
+            self._insertPlainText(clipboard.text())
 
     @pyqtSlot(int, int, int)
     def _docChange(self, pos: int, removed: int, added: int) -> None:
@@ -2599,6 +2601,19 @@ class GuiDocEditor(QTextEdit):
             self.setTextCursor(cursor)
 
         return
+
+    def _insertPlainText(self, text: str) -> None:
+        """Insert plain text at the current cursor position."""
+        if text:
+            # Ensures line height is applied, see #2874
+            logger.debug("Inserted text into document")
+            cursor = self.textCursor()
+            cursor.beginEditBlock()
+            cursor.insertText(text)
+            cursor.endEditBlock()
+            self.setTextCursor(cursor)
+            # Deferred to avoid re-entrancy, see #2917
+            QTimer.singleShot(0, lambda: self.ensureCursorVisible(centre=False))
 
     ##
     #  Internal Functions : Vim Mode

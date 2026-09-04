@@ -29,6 +29,7 @@ from PyQt6.QtCore import QEvent, QPoint, QPointF, QSize, Qt
 from PyQt6.QtGui import QFont, QKeyEvent, QMouseEvent, QPixmap, QStandardItem, QStandardItemModel, QWheelEvent
 from PyQt6.QtWidgets import QFontDialog, QSplitter, QWidget
 
+from novelwriter import CONFIG
 from novelwriter.extensions.modified import (
     NClickableLabel,
     NComboBox,
@@ -113,9 +114,19 @@ def testNFontDialog_Main(qtbot, monkeypatch, nwGUI):
     mockNative = Mock()
     mockNative.return_value = (other, True)
     with monkeypatch.context() as mp:
+        mp.setattr(CONFIG, "osDarwin", False)
         mp.setattr(QFontDialog, "getFont", mockNative)
         font, result = NFontDialog.selectFont(current, widget, "Title", True)
         mockNative.assert_called_once_with(current, widget, "Title")
+        assert font is other
+        assert result is True
+
+    # Test native dialog on macOS
+    with monkeypatch.context() as mp:
+        mp.setattr(CONFIG, "osDarwin", True)
+        mp.setattr(QFontDialog, "exec", lambda *a: None)
+        mp.setattr(QFontDialog, "currentFont", lambda *a: other)
+        font, result = NFontDialog.selectFont(current, widget, "Title", True)
         assert font is other
         assert result is True
 

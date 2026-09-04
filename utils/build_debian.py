@@ -22,10 +22,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 import argparse
-import datetime
 import email.utils
 import shutil
 import sys
+
+from dataclasses import dataclass
+from datetime import date, datetime
 
 from utils.common import (
     MIN_PY_VERSION,
@@ -45,19 +47,28 @@ from utils.common import (
 
 SIGN_KEY = "D6A9F6B8F227CF7C6F6D1EE84DBBE4B734B0BD08"
 
-DEB_STABLE = 13
+# Single source of truth for what's needed to build and test the package
+BUILD_DEPENDS = [
+    "dh-python",
+    "pybuild-plugin-pyproject",
+    "python3-build",
+    "python3-setuptools",
+    "python3-all",
+    "debhelper (>= 9)",
+]
+TEST_DEPENDS = [
+    "python3-pytest (>= 6.0)",
+    "python3-pytestqt",
+    "python3-pytest-timeout",
+]
+
 DEB_CONTROL = f"""
 Source: novelwriter
 Maintainer: Veronica Berglyd Olsen <code@vkbo.net>
 Section: text
 Priority: optional
 Build-Depends:
-  dh-python,
-  pybuild-plugin-pyproject,
-  python3-build,
-  python3-setuptools,
-  python3-all,
-  debhelper (>= 9),
+  %build-dependencies%,
   %dependencies%,
   %test-dependencies%
 Standards-Version: 4.5.1
@@ -74,41 +85,69 @@ Description: A plain text editor for planning and writing novels
 """
 
 
-def makeDebianPackage(
-    signKey: str | None = None,
-    sourceBuild: bool = False,
-    distName: str = "unstable",
-    buildName: str = "",
-    debianVersion: int = 13,
-    forLaunchpad: bool = False,
-    oldLicense: bool = False,
-) -> str:
+def runtimeDepends(target: DistroTarget) -> list[str]:
+    """Return the runtime Depends for a given Debian control version."""
+    depend = [
+        f"python3 (>= {MIN_PY_VERSION})",
+        f"python3-pyqt6 (>= {MIN_QT_VERS})",
+        f"python3-pyqt6.qtsvg (>= {MIN_QT_VERS})",
+        "python3-enchant (>= 2.0)",
+        f"qt6-image-formats-plugins (>= {MIN_QT_VERS})",
+    ]
+    if target.debianVersion > 12:
+        depend.append(f"qt6-svg-plugins (>= {MIN_QT_VERS})")
+    return depend
+
+
+@dataclass(frozen=True)
+class DistroTarget:
+    """A single Debian/Ubuntu distro release to build a package for."""
+
+    family: str
+    codename: str
+    numVersion: str
+    debianVersion: int
+    suffix: str
+    eol: date
+    old: bool = False
+
+
+DISTRO_TARGETS: dict[str, DistroTarget] = {
+    "bookworm": DistroTarget("debian", "bookworm", "12", 12, "deb12u", date(2028, 6, 30), old=True),
+    "trixie": DistroTarget("debian", "trixie", "13", 13, "deb13u", date(2030, 6, 30)),
+    "noble": DistroTarget("ubuntu", "noble", "24.04", 12, "ubuntu24.04.", date(2029, 5, 1), old=True),
+    "resolute": DistroTarget("ubuntu", "resolute", "26.04", 13, "ubuntu26.04.", date(2031, 5, 1)),
+    "stonking": DistroTarget("ubuntu", "stonking", "26.10", 13, "ubuntu26.10.", date(2027, 7, 1)),
+    "wilma": DistroTarget("linuxmint", "wilma", "22", 12, "mint22.", date(2029, 5, 1), old=True),
+}
+
+
+def aptPackages(target: DistroTarget) -> list[str]:
+    """Return the plain apt package names (no version constraints) needed
+    to build and test the Debian package for a given distro target.
+    """
+    entries = [*BUILD_DEPENDS, *runtimeDepends(target), *TEST_DEPENDS]
+    return sorted({entry.split(" ", 1)[0] for entry in entries})
+
+
+def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bool, buildNum: int) -> str:
     """Build a Debian package."""
     print("")
     print("Build Debian Package")
     print("====================")
-    print("On Debian/Ubuntu install: dh-python python3-all debhelper devscripts ")
-    print("                          pybuild-plugin-pyproject")
+    print(f"Target: {target.family.title()} {target.numVersion} {target.codename.title()}")
     print("")
 
     # Version Info
     # ============
 
     numVers, hexVers, relDate = extractVersion()
-    relDate = datetime.datetime.strptime(relDate, "%Y-%m-%d")
+    relDate = datetime.strptime(relDate, "%Y-%m-%d")
     pkgDate = email.utils.format_datetime(relDate.replace(hour=12, tzinfo=None))
     print("")
 
-    pkgDist = ""
-    if forLaunchpad:
-        pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
-    else:
-        pkgVers = numVers
-        if debianVersion < DEB_STABLE:
-            pkgDist = "-oldstable"
-        elif debianVersion > DEB_STABLE:
-            pkgDist = "-testing"
-    pkgVers = f"{pkgVers}+{buildName}" if buildName else pkgVers
+    pkgVers = numVers.replace("a", "~a").replace("b", "~b").replace("rc", "~rc")
+    pkgVers = f"{pkgVers}+{target.suffix}{buildNum}"
 
     # Set Up Folder
     # =============
@@ -147,7 +186,7 @@ def makeDebianPackage(
     print("Copying or generating additional files ...")
     print("")
 
-    copyPackageFiles(outDir, oldLicense=oldLicense)
+    copyPackageFiles(outDir, oldLicense=target.old)
 
     # Copy/Write Debian Files
     # =======================
@@ -155,31 +194,16 @@ def makeDebianPackage(
     shutil.copytree(SETUP_DIR / "debian", debDir)
     print("Copied: debian/*")
 
-    depend = [
-        f"python3 (>= {MIN_PY_VERSION})",
-        f"python3-pyqt6 (>= {MIN_QT_VERS})",
-        f"python3-pyqt6.qtsvg (>= {MIN_QT_VERS})",
-        "python3-enchant (>= 2.0)",
-        f"qt6-image-formats-plugins (>= {MIN_QT_VERS})",
-    ]
-    if debianVersion > 12:
-        depend.append(f"qt6-svg-plugins (>= {MIN_QT_VERS})")
-
-    testDepend = [
-        "python3-pytest (>= 6.0)",
-        "python3-pytestqt",
-        "python3-pytest-timeout",
-    ]
-
-    control = DEB_CONTROL.replace("%dependencies%", ",\n  ".join(depend))
-    control = control.replace("%test-dependencies%", ",\n  ".join(testDepend))
+    control = DEB_CONTROL.replace("%build-dependencies%", ",\n  ".join(BUILD_DEPENDS))
+    control = control.replace("%dependencies%", ",\n  ".join(runtimeDepends(target)))
+    control = control.replace("%test-dependencies%", ",\n  ".join(TEST_DEPENDS))
     writeFile(debDir / "control", control)
     print("Wrote:  debian/control")
 
     writeFile(
         debDir / "changelog",
         (
-            f"novelwriter ({pkgVers}) {distName}; urgency=low\n\n"
+            f"novelwriter ({pkgVers}) {target.codename}; urgency=low\n\n"
             f"  * Update to version {pkgVers}\n\n"
             f" -- Veronica Berglyd Olsen <code@vkbo.net>  {pkgDate}\n"
         ),
@@ -212,13 +236,11 @@ def makeDebianPackage(
         toUpload(bldDir / f"{bldPkg}.tar.xz")
     else:
         systemCall(["dpkg-buildpackage", *signArgs], cwd=outDir)
-        shutil.copyfile(bldDir / f"{bldPkg}.tar.xz", bldDir / f"{bldPkg}{pkgDist}.debian.tar.xz")
-        if pkgDist:
-            shutil.copyfile(bldDir / f"{bldPkg}_all.deb", bldDir / f"{bldPkg}{pkgDist}_all.deb")
-        toUpload(bldDir / f"{bldPkg}{pkgDist}.debian.tar.xz")
-        toUpload(bldDir / f"{bldPkg}{pkgDist}_all.deb")
-        toUpload(makeCheckSum(f"{bldPkg}{pkgDist}.debian.tar.xz", cwd=bldDir))
-        toUpload(makeCheckSum(f"{bldPkg}{pkgDist}_all.deb", cwd=bldDir))
+        shutil.copyfile(bldDir / f"{bldPkg}.tar.xz", bldDir / f"{bldPkg}.debian.tar.xz")
+        toUpload(bldDir / f"{bldPkg}.debian.tar.xz")
+        toUpload(bldDir / f"{bldPkg}_all.deb")
+        toUpload(makeCheckSum(f"{bldPkg}.debian.tar.xz", cwd=bldDir))
+        toUpload(makeCheckSum(f"{bldPkg}_all.deb", cwd=bldDir))
 
     print("")
     print("Done!")
@@ -226,19 +248,33 @@ def makeDebianPackage(
 
     if sourceBuild:
         ppaName = "novelwriter" if hexVers[-2] == "f" else "novelwriter-pre"
-        return f"dput {ppaName}/{distName} {bldDir}/{bldPkg}_source.changes"
+        return f"dput {ppaName}/{target.codename} {bldDir}/{bldPkg}_source.changes"
 
     return ""
 
 
+def printDebDepends(args: argparse.Namespace) -> None:
+    """Print the apt packages needed to build and test a .deb for a given
+    distro target, so CI can install them without duplicating this list.
+    """
+    print(" ".join(aptPackages(DISTRO_TARGETS[args.distro])), end=None)
+
+
 def debian(args: argparse.Namespace) -> None:
-    """Build a .deb package."""
+    """Build a .deb package for a single distro target."""
     if sys.platform != "linux":
         print("ERROR: Command 'build-deb' can only be used on Linux")
         sys.exit(1)
+
+    target = DISTRO_TARGETS[args.distro]
     signKey = SIGN_KEY if args.sign else None
-    makeDebianPackage(signKey, debianVersion=12)
-    makeDebianPackage(signKey, debianVersion=13)
+    bldNum = int(args.build) if args.build else 0
+
+    if date.today() > target.eol:
+        print(f"ERROR: {target.family.title()} {target.codename} is EOL, not building package for it.")
+        sys.exit(1)
+
+    makeDebianPackage(target, signKey, False, bldNum)
 
 
 def launchpad(args: argparse.Namespace) -> None:
@@ -253,20 +289,16 @@ def launchpad(args: argparse.Namespace) -> None:
     print("")
 
     if args.build:
-        bldNum = str(args.build)
+        bldNum = int(args.build)
     else:
-        bldNum = "0"
+        bldNum = 0
 
-    distLoop = [
-        ("24.04", "noble", 12, True),
-        ("26.04", "resolute", 13, False),
-        ("26.10", "stonking", 13, False),
-    ]
+    ubuntuTargets = [t for t in DISTRO_TARGETS.values() if t.family == "ubuntu"]
 
     print("Building Ubuntu packages for:")
     print("")
-    for distNum, codeName, _, _ in distLoop:
-        print(f" * Ubuntu {distNum} {codeName.title()}")
+    for target in ubuntuTargets:
+        print(f" * Ubuntu {target.numVersion} {target.codename.title()}")
     print("")
 
     signKey = SIGN_KEY if args.sign else None
@@ -275,17 +307,8 @@ def launchpad(args: argparse.Namespace) -> None:
     print("")
 
     dputCmd = []
-    for distNum, codeName, debVer, oldLicense in distLoop:
-        buildName = f"ubuntu{distNum}.{bldNum}"
-        dCmd = makeDebianPackage(
-            signKey=signKey,
-            sourceBuild=True,
-            distName=codeName,
-            buildName=buildName,
-            debianVersion=debVer,
-            forLaunchpad=True,
-            oldLicense=oldLicense,
-        )
+    for target in ubuntuTargets:
+        dCmd = makeDebianPackage(target, signKey, True, bldNum)
         dputCmd.append(dCmd)
 
     print("Packages Built")

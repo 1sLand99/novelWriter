@@ -49,9 +49,9 @@ class nwConst:
     URL_WEB = "https://novelwriter.io"
     URL_DOCS = "https://docs.novelwriter.io"
     URL_RELEASES = "https://releases.novelwriter.io"
-    URL_CODE = "https://github.com/vkbo/novelWriter"
-    URL_REPORT = "https://github.com/vkbo/novelWriter/issues"
-    URL_HELP = "https://github.com/vkbo/novelWriter/discussions"
+    URL_CODE = "https://github.com/saga-soft/novelWriter"
+    URL_REPORT = "https://github.com/saga-soft/novelWriter/issues"
+    URL_HELP = "https://github.com/saga-soft/novelWriter/discussions"
 
     # Requests
     USER_AGENT = "Mozilla/5.0 (compatible; novelWriter (Python))"

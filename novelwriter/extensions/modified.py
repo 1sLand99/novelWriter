@@ -157,6 +157,16 @@ class NFontDialog(QFontDialog):
     def selectFont(font: QFont, parent: QWidget, title: str, native: bool) -> tuple[QFont, bool]:
         """Open the dialog and select a font."""
         if native:
+            if CONFIG.osDarwin:
+                # The macOS font panel has no accept button, so closing it
+                # must count as accepting the current font.
+                # Also we can't use `QFontDialog.getFont(..)` because it
+                # always returns the previously selected font without an accept action
+                dialog = QFontDialog(font, parent)
+                dialog.setWindowTitle(title)
+                dialog.exec()
+                return dialog.currentFont(), True
+
             # If we're using the native dialog, let Qt handle it
             font, result = QFontDialog.getFont(font, parent, title)
             return font, bool(result)
@@ -483,8 +493,8 @@ class NTabWidget(QTabWidget):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent=parent)
-        self.setDocumentMode(True)
         self.setTabBar(NTabBar(self))
+        self.setDocumentMode(True)
 
     def refreshTheme(self) -> None:
         """Refresh the tab colours for theme updates."""
@@ -501,6 +511,7 @@ class NTabBar(QTabBar):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent=parent)
+        self.setDrawBase(False)
 
     def tabSizeHint(self, index: int) -> QSize:
         """Reduce the tab height by shrinking the margin above and below the text."""
