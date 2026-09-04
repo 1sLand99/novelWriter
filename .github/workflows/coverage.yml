@@ -1,0 +1,79 @@
+name: Coverage Report
+
+on:
+  workflow_run:
+    workflows:
+      - Tests
+    types:
+      - completed
+
+jobs:
+  coverageReport:
+    name: Coverage Report
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
+    steps:
+      - name: Find Pull Request
+        id: find-pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          number=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '[.[] | select(.state == "open")] | first.number // empty')
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Source
+        if: steps.find-pr.outputs.number != ''
+        uses: actions/checkout@v7
+        with:
+          ref: refs/pull/${{ steps.find-pr.outputs.number }}/merge
+
+      - name: Download Coverage Data
+        if: steps.find-pr.outputs.number != ''
+        uses: actions/download-artifact@v8
+        with:
+          pattern: coverage-data-*
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Install UV
+        if: steps.find-pr.outputs.number != ''
+        uses: astral-sh/setup-uv@v10.0.1
+
+      - name: Combine Coverage Data
+        if: steps.find-pr.outputs.number != ''
+        run: |
+          uvx coverage combine
+          uvx coverage report --skip-covered
+
+      - name: Build Comment Body
+        if: steps.find-pr.outputs.number != ''
+        run: |
+          {
+            echo '<!-- coverage-report -->'
+            echo '### Coverage Report (Linux, macOS, Windows)'
+            echo
+            uvx coverage report --skip-covered --show-missing --format=markdown --precision=3
+            echo
+            echo "**Total: $(uvx coverage report --format=total --precision=3)%**"
+          } > coverage-comment.md
+
+      - name: Post PR Comment
+        if: steps.find-pr.outputs.number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.find-pr.outputs.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          comment_id=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate --jq '.[] | select(.body | startswith("<!-- coverage-report -->")) | .id' | head -n1)
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH "repos/$REPO/issues/comments/$comment_id" -F body=@coverage-comment.md
+          else
+            gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file coverage-comment.md
+          fi
