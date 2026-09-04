@@ -22,9 +22,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          number=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '[.[] | select(.state == "open")] | first.number // empty')
+          number=$(gh api "repos/$REPO/pulls?head=$HEAD_OWNER:$HEAD_BRANCH&state=open" --jq '.[0].number // empty')
           echo "number=$number" >> "$GITHUB_OUTPUT"
 
       - name: Checkout Source
