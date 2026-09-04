@@ -114,6 +114,9 @@ jobs:
       contents: read
     env:
       COVERAGE_FILE: .coverage.win
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Source
         uses: actions/checkout@v7
@@ -197,6 +200,44 @@ jobs:
           else
             gh pr comment "$PR_NUMBER" --body-file coverage-comment.md
           fi
+
+  coverageSummary:
+    name: Coverage Summary
+    needs:
+      - testLinux
+      - testMac
+      - testWin
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v7
+
+      - name: Download Coverage Data
+        uses: actions/download-artifact@v8
+        with:
+          pattern: coverage-data-*
+          merge-multiple: true
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.0.1
+
+      - name: Combine Coverage Data
+        run: |
+          uvx coverage combine
+          uvx coverage report --skip-covered
+
+      - name: Write Coverage Summary
+        run: |
+          {
+            echo '### Coverage Report (Linux, macOS, Windows)'
+            echo
+            uvx coverage report --skip-covered --show-missing --format=markdown --precision=3
+            echo
+            echo "**Total: $(uvx coverage report --format=total --precision=3)%**"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   testUbuntu24:
     name: Ubuntu 24.04 & Sys Packages
