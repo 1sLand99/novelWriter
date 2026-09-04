@@ -555,7 +555,7 @@ class Config:
         else:
             font = QFont()
             if self.osWindows and "Segoe UI" in QFontDatabase.families():
-                # On Windows we default to Arial if possible
+                # On Windows we default to Segoe UI if possible
                 font.setFamily("Segoe UI")
                 font.setPointSize(9)
             else:
