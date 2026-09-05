@@ -34,7 +34,7 @@ _This project is developed and maintained with care by actual humans._
 </tr>
 <tr>
   <td><img align="left" style="width: 25px;" src="https://raw.githubusercontent.com/saga-soft/novelWriter/main/setup/cloudsmith_logo.png"></td>
-  <td>Package repository hosting is graciously provided for free by <a href="https://cloudsmith.com">Cloudsmith</a>.</td>
+  <td>Free package repository hosting is graciously provided by <a href="https://cloudsmith.com">Cloudsmith</a>.</td>
 </tr>
 </table>
 
