@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import logging
 import sys
+import tomllib
 
 from pathlib import Path
 from time import time
@@ -127,6 +128,9 @@ class Config:
         "autoSelect",
         "backupInterval",
         "backupOnClose",
+        "buildFormat",
+        "buildTime",
+        "buildType",
         "countUnit",
         "cursorWidth",
         "darkTheme",
@@ -162,6 +166,7 @@ class Config:
         "iconColTree",
         "iconTheme",
         "incNotesWCount",
+        "installSource",
         "isDebug",
         "kernelVer",
         "lastNotes",
@@ -444,6 +449,13 @@ class Config:
         self.kernelVer = QSysInfo.kernelVersion()
         self.isDebug = False  # True if running in debug mode
         self.memInfo = False  # True if displaying mem info in status bar
+
+        # Build Meta
+        self.buildTime = ""
+        self.buildType = ""
+        self.buildFormat = ""
+        self.installSource = ""
+        self._parseBuildMeta()
 
         # Packages
         self.hasEnchant = False  # The pyenchant package
@@ -1069,6 +1081,18 @@ class Config:
     ##
     #  Internal Functions
     ##
+
+    def _parseBuildMeta(self) -> None:
+        """Parse the build meta file and set the build information."""
+        try:
+            with open(self.assetPath("meta.toml"), mode="rb") as fileObj:
+                data = tomllib.load(fileObj).get("Build", {})
+                self.buildTime = str(data.get("timestamp", ""))
+                self.buildType = str(data.get("type", ""))
+                self.buildFormat = str(data.get("format", ""))
+                self.installSource = str(data.get("install_source", ""))
+        except Exception:
+            logException()
 
     def _packList(self, data: list) -> str:
         """Pack a list of items into a comma-separated string for saving

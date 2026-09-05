@@ -42,6 +42,7 @@ from utils.common import (
     makeCheckSum,
     systemCall,
     toUpload,
+    updateMetaFile,
     writeFile,
 )
 
@@ -130,7 +131,13 @@ def aptPackages(target: DistroTarget) -> list[str]:
     return sorted({entry.split(" ", 1)[0] for entry in entries})
 
 
-def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bool, buildNum: int) -> str:
+def makeDebianPackage(
+    target: DistroTarget,
+    signKey: str | None,
+    sourceBuild: bool,
+    buildNum: int,
+    installSource: str,
+) -> str:
     """Build a Debian package."""
     print("")
     print("Build Debian Package")
@@ -181,6 +188,7 @@ def makeDebianPackage(target: DistroTarget, signKey: str | None, sourceBuild: bo
 
     copySourceCode(outDir)
     copyTestCode(outDir)
+    updateMetaFile(outDir / "novelwriter" / "assets" / "meta.toml", buildFormat="debian", installSource=installSource)
 
     print("")
     print("Copying or generating additional files ...")
@@ -269,12 +277,13 @@ def debian(args: argparse.Namespace) -> None:
     target = DISTRO_TARGETS[args.distro]
     signKey = SIGN_KEY if args.sign else None
     bldNum = int(args.build) if args.build else 0
+    installSource = args.install_source or "cloudsmith"
 
     if date.today() > target.eol:
         print(f"ERROR: {target.family.title()} {target.codename} is EOL, not building package for it.")
         sys.exit(1)
 
-    makeDebianPackage(target, signKey, False, bldNum)
+    makeDebianPackage(target, signKey, False, bldNum, installSource)
 
 
 def launchpad(args: argparse.Namespace) -> None:
@@ -308,7 +317,7 @@ def launchpad(args: argparse.Namespace) -> None:
 
     dputCmd = []
     for target in ubuntuTargets:
-        dCmd = makeDebianPackage(target, signKey, True, bldNum)
+        dCmd = makeDebianPackage(target, signKey, True, bldNum, "launchpad")
         dputCmd.append(dCmd)
 
     print("Packages Built")

@@ -32,11 +32,21 @@ import utils.build_appimage
 import utils.build_binary
 import utils.build_debian
 import utils.build_flatpak
+import utils.build_pypi
 import utils.build_windows
 import utils.docs
 import utils.icon_themes
 
-from utils.common import ROOT_DIR, SETUP_DIR, extractReqs, extractVersion, readFile, stripVersion, writeFile
+from utils.common import (
+    ROOT_DIR,
+    SETUP_DIR,
+    extractReqs,
+    extractVersion,
+    isStableVersion,
+    readFile,
+    stripVersion,
+    writeFile,
+)
 
 OS_LINUX = sys.platform.startswith("linux")
 OS_DARWIN = sys.platform.startswith("darwin")
@@ -50,8 +60,7 @@ def printVersion(args: argparse.Namespace) -> None:
 
 def printChannel(args: argparse.Namespace) -> None:
     """Print 'stable' or 'pre' depending on the release channel, and exit."""
-    _, hexVers, _ = extractVersion(beQuiet=True)
-    print("stable" if hexVers[-2] == "f" else "pre", end=None)
+    print("stable" if isStableVersion() else "pre", end=None)
 
 
 def cleanBuildDirs(args: argparse.Namespace) -> None:
@@ -70,6 +79,7 @@ def cleanBuildDirs(args: argparse.Namespace) -> None:
         ROOT_DIR / "dist_doc",
         ROOT_DIR / "dist_flathub",
         ROOT_DIR / "dist_flatpak",
+        ROOT_DIR / "dist_pypi",
         ROOT_DIR / "dist",
         ROOT_DIR / "novelWriter.egg-info",
     ]
@@ -213,6 +223,7 @@ if __name__ == "__main__":
     cmdBuildDeb.add_argument("distro", help=f"Release to build for: {distros}.")
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildDeb.add_argument("--build", type=int, help="Set build number, appended to the distro suffix.")
+    cmdBuildDeb.add_argument("--install-source", help="Override the install source in meta.toml.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 
     # Print Debian Build Dependencies
@@ -247,6 +258,10 @@ if __name__ == "__main__":
     )
     cmdBuildFlathub.add_argument("path", nargs="?", help="Path to copy the generated files into.")
     cmdBuildFlathub.set_defaults(func=utils.build_flatpak.flathub)
+
+    # Build PyPI Packages
+    cmdBuildPypi = parsers.add_parser("build-pypi", help="Build sdist and wheel packages for PyPI.")
+    cmdBuildPypi.set_defaults(func=utils.build_pypi.pypi)
 
     # Build Windows Inno Setup Installer
     cmdBuildSetupExe = parsers.add_parser(

@@ -39,6 +39,7 @@ from utils.common import (
     readFile,
     removeRedundantQt,
     systemCall,
+    updateMetaFile,
     writeFile,
 )
 
@@ -49,6 +50,7 @@ def prepareCode(outDir: Path) -> None:
     print("")
 
     copySourceCode(outDir)
+    updateMetaFile(outDir / "novelwriter" / "assets" / "meta.toml", buildFormat="windows-setup", installSource="github")
 
     files = [
         ROOT_DIR / "CREDITS.md",
