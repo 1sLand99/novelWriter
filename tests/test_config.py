@@ -93,6 +93,18 @@ def testConfig_Constructor(monkeypatch):
 
 
 @pytest.mark.base
+def testConfig_BuildMeta():
+    """Test parsing of the build meta.toml file against the repo's
+    checked-in placeholder, which is populated by the build scripts.
+    """
+    conf = Config()
+    assert conf.buildTime == ""
+    assert conf.buildType == "testing"
+    assert conf.buildFormat == "source"
+    assert conf.installSource == "repository"
+
+
+@pytest.mark.base
 def testConfig_InitLoadSave(monkeypatch, fncPath, tstPaths):
     """Test config initialisation."""
     conf = Config()
