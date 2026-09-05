@@ -1,12 +1,8 @@
-name: LockThreads
+name: Lock Threads
 
 on:
   schedule:
     - cron: "14 3 */3 * *"
-
-permissions:
-  issues: write
-  pull-requests: write
 
 concurrency:
   group: lock-threads
@@ -18,7 +14,7 @@ jobs:
     steps:
       - uses: dessant/lock-threads@v6
         with:
-          github-token: ${{ github.token }}
+          github-token: ${{ secrets.SAGA_SOFT_BOT_TOKEN }}
           issue-inactive-days: 120
           issue-comment: >
             This issue has been automatically locked since there has not been

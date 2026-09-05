@@ -1,4 +1,4 @@
-name: Part-Flatpak
+name: Part Flatpak
 
 on: workflow_call
 
