@@ -1,0 +1,23 @@
+name: AutoApprove
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+concurrency:
+  group: auto-approve-${{ github.event.pull_request.number }}
+
+jobs:
+  approve:
+    name: Approve Owner PRs
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false && github.event.pull_request.user.login == 'vkbo'
+    steps:
+      - name: Approve pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr review "$PR_URL" --approve
