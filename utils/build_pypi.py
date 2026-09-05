@@ -31,7 +31,7 @@ def pypi(args: argparse.Namespace) -> None:
     """Build sdist and wheel packages for PyPI."""
     print("")
     print("Build PyPI Packages")
-    print("====================")
+    print("===================")
     print("")
 
     bldDir = ROOT_DIR / "dist_pypi"
