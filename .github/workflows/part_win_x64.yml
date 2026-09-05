@@ -1,4 +1,4 @@
-name: Part-Windows-X64
+name: Part Windows X64
 
 on: workflow_call
 

@@ -1,4 +1,4 @@
-name: Part-Debian
+name: Part Debian
 
 on:
   workflow_call:
