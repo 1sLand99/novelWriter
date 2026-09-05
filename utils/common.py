@@ -26,13 +26,45 @@ import subprocess
 import sys
 import tomllib
 
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT_DIR = Path(__file__).parent.parent
 SETUP_DIR = ROOT_DIR / "setup"
 
 MIN_QT_VERS = "6.4"
 MIN_PY_VERSION = "3.11"
+LOCAL_TZ = ZoneInfo("Europe/Oslo")
+
+META_TEMPLATE = """
+[Build]
+timestamp = "{build_timestamp}"
+type = "{build_type}"
+format = "{build_format}"
+install_source = "{install_source}"
+"""
+
+
+def isStableVersion() -> bool:
+    """Return True if the version is a stable release."""
+    _, hexVers, _ = extractVersion(beQuiet=True)
+    return hexVers[-2] == "f"
+
+
+def updateMetaFile(buildFormat: str, installSource: str) -> None:
+    """Update the meta.toml file with build information."""
+    metaFile = ROOT_DIR / "novelwriter" / "assets" / "meta.toml"
+    metaFile.write_text(
+        META_TEMPLATE.format(
+            build_timestamp=datetime.now(tz=LOCAL_TZ).isoformat(timespec="seconds"),
+            build_type="stable" if isStableVersion() else "testing",
+            build_format=buildFormat,
+            install_source="repository",
+        ),
+        encoding="utf-8",
+    )
+    print("Updated:", metaFile.relative_to(ROOT_DIR), flush=True)
 
 
 def extractReqs(groups: list[str]) -> list[str]:

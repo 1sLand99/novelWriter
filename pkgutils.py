@@ -36,7 +36,16 @@ import utils.build_windows
 import utils.docs
 import utils.icon_themes
 
-from utils.common import ROOT_DIR, SETUP_DIR, extractReqs, extractVersion, readFile, stripVersion, writeFile
+from utils.common import (
+    ROOT_DIR,
+    SETUP_DIR,
+    extractReqs,
+    extractVersion,
+    isStableVersion,
+    readFile,
+    stripVersion,
+    writeFile,
+)
 
 OS_LINUX = sys.platform.startswith("linux")
 OS_DARWIN = sys.platform.startswith("darwin")
@@ -50,8 +59,7 @@ def printVersion(args: argparse.Namespace) -> None:
 
 def printChannel(args: argparse.Namespace) -> None:
     """Print 'stable' or 'pre' depending on the release channel, and exit."""
-    _, hexVers, _ = extractVersion(beQuiet=True)
-    print("stable" if hexVers[-2] == "f" else "pre", end=None)
+    print("stable" if isStableVersion() else "pre", end=None)
 
 
 def cleanBuildDirs(args: argparse.Namespace) -> None:
@@ -213,6 +221,7 @@ if __name__ == "__main__":
     cmdBuildDeb.add_argument("distro", help=f"Release to build for: {distros}.")
     cmdBuildDeb.add_argument("--sign", action="store_true", help="Sign the package.")
     cmdBuildDeb.add_argument("--build", type=int, help="Set build number, appended to the distro suffix.")
+    cmdBuildDeb.add_argument("--install-source", help="Override the install source in meta.toml.")
     cmdBuildDeb.set_defaults(func=utils.build_debian.debian)
 
     # Print Debian Build Dependencies

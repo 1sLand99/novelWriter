@@ -41,6 +41,7 @@ from utils.common import (
     removeRedundantQt,
     systemCall,
     toUpload,
+    updateMetaFile,
     writeFile,
 )
 
@@ -63,6 +64,7 @@ def appImage(args: argparse.Namespace) -> None:
     print("")
     print("Build AppImage")
     print("=" * 120)
+    updateMetaFile(buildFormat="appimage", installSource="GitHub")
 
     mLinux = args.linux
     mArch = args.arch

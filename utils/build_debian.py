@@ -42,6 +42,7 @@ from utils.common import (
     makeCheckSum,
     systemCall,
     toUpload,
+    updateMetaFile,
     writeFile,
 )
 
@@ -266,6 +267,7 @@ def debian(args: argparse.Namespace) -> None:
         print("ERROR: Command 'build-deb' can only be used on Linux")
         sys.exit(1)
 
+    updateMetaFile(buildFormat="debian", installSource=args.install_source or "GitHub")
     target = DISTRO_TARGETS[args.distro]
     signKey = SIGN_KEY if args.sign else None
     bldNum = int(args.build) if args.build else 0
@@ -287,6 +289,7 @@ def launchpad(args: argparse.Namespace) -> None:
     print("Launchpad Packages")
     print("==================")
     print("")
+    updateMetaFile(buildFormat="debian", installSource="Launchpad")
 
     if args.build:
         bldNum = int(args.build)

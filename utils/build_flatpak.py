@@ -39,6 +39,7 @@ from utils.common import (
     makeCheckSum,
     readFile,
     toUpload,
+    updateMetaFile,
     writeFile,
 )
 
@@ -146,6 +147,7 @@ def flatpak(args: argparse.Namespace) -> None:
     print("Build Flatpak")
     print("=============")
     print("")
+    updateMetaFile(buildFormat="flatpak", installSource="GitHub")
 
     buildInfo = extractBuildInfo("flatpak")
     qtVersion = buildInfo["qt_version"]

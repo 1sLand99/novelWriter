@@ -39,6 +39,7 @@ from utils.common import (
     readFile,
     removeRedundantQt,
     systemCall,
+    updateMetaFile,
     writeFile,
 )
 
@@ -103,6 +104,7 @@ def main(args: argparse.Namespace) -> None:
     print("Build Standalone Windows Package")
     print("================================")
     print("")
+    updateMetaFile(buildFormat="windows-setup", installSource="GitHub")
 
     numVers, _, _ = extractVersion()
     print(f"Version: {numVers}")
