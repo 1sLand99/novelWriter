@@ -2,7 +2,11 @@ name: AutoApprove
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, ready_for_review]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 permissions:
   pull-requests: write
@@ -16,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false && github.event.pull_request.user.login == 'vkbo'
     steps:
-      - name: Approve pull request
+      - name: Approve Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
