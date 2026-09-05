@@ -30,6 +30,11 @@ See the website for complete [Release Notes](https://novelwriter.io/releases/rel
   reduced the default application font size from 10pt to 9pt. By @HeyMyian. Discussed in #2955.
   PR #2998.
 
+**Other Changes**
+
+* Bumped the project file format version to 1.6 to block the project from being opened by older
+  versions of novelWriter that cannot read it correctly anyway. By @vkbo. PR #2984.
+
 **Packaging**
 
 * Rewrote the Debian package build to publish through a package registry, with build versions now
