@@ -149,7 +149,7 @@ jobs:
           retention-days: 1
 
   coverageReport:
-    name: Coverage Report
+    name: PR Coverage Report
     needs:
       - testLinux
       - testMac
@@ -202,7 +202,7 @@ jobs:
           fi
 
   coverageSummary:
-    name: Coverage Summary
+    name: Action Coverage Report
     needs:
       - testLinux
       - testMac

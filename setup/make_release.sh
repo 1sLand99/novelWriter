@@ -14,8 +14,7 @@ uv run pkgutils.py build-assets
 uv run pkgutils.py icons optional
 
 echo ""
-echo " Building Linux Packages"
+echo " Building Launchpad Packages"
 echo "================================================================================"
 echo ""
-uv run pkgutils.py build-deb --sign
 uv run pkgutils.py build-ubuntu --sign

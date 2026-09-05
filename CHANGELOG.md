@@ -1,5 +1,53 @@
 # novelWriter Changelog
 
+## Version 2026.2 [2026-09-05]
+
+### Release Notes
+
+The 2026.2 release is based on the features added in 2026.2 Beta 1, Beta 2, RC 1.
+
+See the website for complete [Release Notes](https://novelwriter.io/releases/release_26_2.html).
+
+### Detailed Changelog
+
+**Bugfixes**
+
+* Fixed a bug on macOS where using the system's native font selection dialog did not apply the
+  selected font, since Qt's native panel does not confirm the choice with an OK button. By
+  @kkostov. PR #2970.
+* Fixed a bug from the Beta 1 release where tab widgets could show a border despite having flat
+  tabs enabled. By @vkbo. PR #2971.
+* Fixed a bug from the Beta 1 release where pasting rich text could repeat formatting
+  unnecessarily when the source contained overlapping hidden formats. Restored the ability to
+  paste as plain text, now bound to `Ctrl+Shift+V`, which was lost when rich text paste was
+  introduced. By @vkbo. Issues #2978 and #2979. PR #2980.
+* Fixed missing theme colours in the Dark Arts and Ruby Night themes added in the Beta 2 release.
+  By @HeyMyian. PR #3003.
+
+**User Interface**
+
+* Changed the default line height from 1.0 to 1.15, the default font on Windows to Segoe UI, and
+  reduced the default application font size from 10pt to 9pt. By @HeyMyian. Discussed in #2955.
+  PR #2998.
+
+**Other Changes**
+
+* Bumped the project file format version to 1.6 to block the project from being opened by older
+  versions of novelWriter that cannot read it correctly anyway. By @vkbo. PR #2984.
+
+**Packaging**
+
+* Rewrote the Debian package build to publish through a package registry, with build versions now
+  selectable and Linux Mint added as a supported target. By @vkbo. PRs #2986 and #2990.
+
+**Internationalisation**
+
+* The Norwegian, US English, German, Italian, Japanese, Polish and Portuguese translations are
+  now complete, and the Catalan translation has been updated. Translations are contributed via
+  [Crowdin](https://crowdin.com/project/novelwriter). PR #2968.
+
+----
+
 ## Version 2026.2 RC 1 [2026-08-09]
 
 ### Release Notes
