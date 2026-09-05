@@ -91,12 +91,12 @@
     <message>
       <location filename="../novelwriter/manuscript/buildsettings.py"/>
       <source>Include tags and references</source>
-      <translation type="unfinished"/>
+      <translation>Inclou etiquetes i referències</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/buildsettings.py"/>
       <source>Ignore these keys</source>
-      <translation type="unfinished"/>
+      <translation>Ignora aquestes claus</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/buildsettings.py"/>
@@ -126,7 +126,7 @@
     <message>
       <location filename="../novelwriter/manuscript/buildsettings.py"/>
       <source>Justify text on manual line breaks</source>
-      <translation type="unfinished"/>
+      <translation>Justifica el text als salts de línia manuals</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/buildsettings.py"/>
@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Seleccionar font</translation>
+      <translation>Seleccionar font</translation>
     </message>
   </context>
   <context>
@@ -735,7 +735,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Electronic Publication E-book (.epub)</source>
-      <translation type="unfinished"/>
+      <translation>Publicació electrònica E-book (.epub)</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -995,67 +995,67 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Per Session</source>
-      <translation type="unfinished"/>
+      <translation>Per sessió</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Per Day</source>
-      <translation type="unfinished"/>
+      <translation>Per dia</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Per Week</source>
-      <translation type="unfinished"/>
+      <translation>Per setmana</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Per Month</source>
-      <translation type="unfinished"/>
+      <translation>Per mes</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Filtres de documents</translation>
+      <translation>Filtra documents</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Content Filters</source>
-      <translation type="unfinished"/>
+      <translation>Filtra continguts</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Novel documents</source>
-      <translation type="unfinished"/>
+      <translation>Documents de la novel·la</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Project notes</source>
-      <translation type="unfinished"/>
+      <translation>Anotacions del projecte</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Inactive documents</source>
-      <translation type="unfinished"/>
+      <translation>Documents inactius</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">Capçaleres</translation>
+      <translation>Capçaleres</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Body text paragraphs</source>
-      <translation type="unfinished"/>
+      <translation>Paràgrafs de text</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Tags and references</source>
-      <translation type="unfinished"/>
+      <translation>Etiquetes i referències</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Comments and footnotes</source>
-      <translation type="unfinished"/>
+      <translation>Comentaris i peus de pàgina</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1353,7 +1353,7 @@
     <message>
       <location filename="../novelwriter/editor/editsearch.py"/>
       <source>Auto-Replace Symbols</source>
-      <translation type="unfinished"/>
+      <translation>Autoreemplaça símbols</translation>
     </message>
     <message>
       <location filename="../novelwriter/editor/editsearch.py"/>
@@ -1569,12 +1569,12 @@
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>View</source>
-      <translation type="unfinished"/>
+      <translation>Mostra</translation>
     </message>
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>Edit</source>
-      <translation type="unfinished">Editar</translation>
+      <translation>Edita</translation>
     </message>
   </context>
   <context>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Detalls</translation>
+      <translation>Detalls</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -1987,7 +1987,7 @@
     <message>
       <location filename="../novelwriter/guimain.py"/>
       <source>Loaded theme "{0}" by {1}</source>
-      <translation type="unfinished"/>
+      <translation>S'ha carregat el tema "{0} de {1}</translation>
     </message>
     <message>
       <location filename="../novelwriter/guimain.py"/>
@@ -2185,17 +2185,17 @@
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Zoom In</source>
-      <translation type="unfinished"/>
+      <translation>Ampliar</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Zoom Out</source>
-      <translation type="unfinished"/>
+      <translation>Reduir</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Reset Zoom</source>
-      <translation type="unfinished"/>
+      <translation>Restableix el zoom</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
@@ -2620,7 +2620,7 @@
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
@@ -2678,7 +2678,7 @@
     <message>
       <location filename="../novelwriter/gui/statusbar.py"/>
       <source>Reset Daily Progress</source>
-      <translation type="unfinished"/>
+      <translation>Restableix el progrés diari</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/statusbar.py"/>
@@ -2713,17 +2713,17 @@
     <message>
       <location filename="../novelwriter/gui/statusbar.py"/>
       <source>Daily Progress: {0}/{1}</source>
-      <translation type="unfinished"/>
+      <translation>Progrés diari: {0}/{1}</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/statusbar.py"/>
       <source>Project Progress: {0}/{1}</source>
-      <translation type="unfinished"/>
+      <translation>Progrés del projecte: {0}/{1}</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/statusbar.py"/>
       <source>Do you want to reset the daily progress count?</source>
-      <translation type="unfinished"/>
+      <translation>Voleu restablir el comptador de progrés diari?</translation>
     </message>
   </context>
   <context>
@@ -2731,7 +2731,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
@@ -2756,7 +2756,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Build Settings</source>
-      <translation type="unfinished"/>
+      <translation>Paràmetres de construcció</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
@@ -2771,7 +2771,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Statistics</source>
-      <translation type="unfinished"/>
+      <translation>Estadístiques</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
@@ -3378,17 +3378,17 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Line height</source>
-      <translation type="unfinished">Alçada de la línia</translation>
+      <translation>Alçada de la línia</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>The relative line height in the editor and viewer.</source>
-      <translation type="unfinished"/>
+      <translation>Alçada relativa de línia a l'editor i visualitzador.</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>em</source>
-      <translation type="unfinished"/>
+      <translation>em</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -3771,7 +3771,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Auto-Replace Symbols</source>
-      <translation type="unfinished"/>
+      <translation>Autoreemplaça símbols</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -3809,7 +3809,7 @@
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Goals</source>
-      <translation type="unfinished"/>
+      <translation>Objectius</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
@@ -4021,7 +4021,7 @@
     <message>
       <location filename="../novelwriter/gui/sidebar.py"/>
       <source>Manuscript Build</source>
-      <translation type="unfinished"/>
+      <translation>Construcció del manuscrit</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/sidebar.py"/>
@@ -4540,7 +4540,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Characters in dialogue</source>
-      <translation type="unfinished"/>
+      <translation>Caràcters als diàlegs</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -4585,7 +4585,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Dialogue</source>
-      <translation type="unfinished"/>
+      <translation>Diàlegs</translation>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -4778,47 +4778,47 @@
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Writing Goals</source>
-      <translation type="unfinished"/>
+      <translation>Objectius d'escriptura</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Project target</source>
-      <translation type="unfinished"/>
+      <translation>Fita del projecte</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Set to zero to disable.</source>
-      <translation type="unfinished"/>
+      <translation>Establiu a zero per a desactivar.</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Daily writing goal</source>
-      <translation type="unfinished"/>
+      <translation>Objectiu diari d'escriptura</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Count characters instead of words</source>
-      <translation type="unfinished"/>
+      <translation>Comptar caràcters en lloc de mots</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Planned completion date</source>
-      <translation type="unfinished"/>
+      <translation>Data de finalització prevista</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Calculate daily goal automatically</source>
-      <translation type="unfinished"/>
+      <translation>Calcula automàticament l'objectiu diari</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Calculates daily goal based on project target and date.</source>
-      <translation type="unfinished"/>
+      <translation>Calcula l'objectiu diari en funció de la fita i la data del projecte.</translation>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/projectsettings.py"/>
       <source>Included Novel Root Folders</source>
-      <translation type="unfinished"/>
+      <translation>Carpetes arrel de novel·les incloses</translation>
     </message>
   </context>
   <context>
@@ -5218,12 +5218,12 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filtres</translation>
+      <translation>Filtres</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Root Folders</source>
-      <translation type="unfinished"/>
+      <translation>Carpetes arrel</translation>
     </message>
   </context>
   <context>
@@ -5279,12 +5279,12 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Count</source>
-      <translation type="unfinished"/>
+      <translation>Recompte</translation>
     </message>
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Valor</translation>
+      <translation>Valor</translation>
     </message>
   </context>
   <context>
@@ -5445,7 +5445,7 @@
     <message>
       <location filename="../novelwriter/gui/projtree.py"/>
       <source>Set Children to ...</source>
-      <translation type="unfinished"/>
+      <translation>Estableix els fills a ...</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/projtree.py"/>

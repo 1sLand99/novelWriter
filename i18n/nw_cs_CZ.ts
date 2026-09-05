@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Vybrat písmo</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1015,7 +1015,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Filtry dokumentu</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1040,7 +1040,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">Nadpisy</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1574,7 +1574,7 @@
     <message>
       <location filename="../novelwriter/editor/hovercard.py"/>
       <source>Edit</source>
-      <translation type="unfinished">Upravit</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Podrobnosti</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -3378,7 +3378,7 @@
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
       <source>Line height</source>
-      <translation type="unfinished">Výška řádku</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/dialogs/preferences.py"/>
@@ -5218,7 +5218,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filtry</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -5284,7 +5284,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Hodnota</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

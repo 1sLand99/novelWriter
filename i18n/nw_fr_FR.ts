@@ -419,7 +419,7 @@
     <message>
       <location filename="../novelwriter/gui/theme.py"/>
       <source>Select Font</source>
-      <translation type="unfinished">Sélectionner la police</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1015,7 +1015,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Document Filters</source>
-      <translation type="unfinished">Filtres de documents</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1040,7 +1040,7 @@
     <message>
       <location filename="../novelwriter/constants.py"/>
       <source>Headings</source>
-      <translation type="unfinished">En-têtes</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/constants.py"/>
@@ -1846,7 +1846,7 @@
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
       <source>Details</source>
-      <translation type="unfinished">Détails</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/itemdetails.py"/>
@@ -2625,7 +2625,7 @@
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
       <source>Writing Statistics</source>
-      <translation>Statistiques d'écriture</translation>
+      <translation>Statistiques d&apos;écriture</translation>
     </message>
     <message>
       <location filename="../novelwriter/gui/mainmenu.py"/>
@@ -4175,7 +4175,7 @@
     <message>
       <location filename="../novelwriter/tools/writingstats.py"/>
       <source>Word count cap for the histogram</source>
-      <translation>Compte de mots maximum dans l'histogramme</translation>
+      <translation>Compte de mots maximum dans l&apos;histogramme</translation>
     </message>
     <message>
       <location filename="../novelwriter/tools/writingstats.py"/>
@@ -4273,7 +4273,7 @@
     <message>
       <location filename="../novelwriter/core/project.py"/>
       <source>This project was saved by a newer version of novelWriter, version {0}. This is version {1}. If you continue to open the project, some attributes and settings may not be preserved, but the overall project should be fine. Continue opening the project?</source>
-      <translation>Ce projet a été enregistré par une version plus récente de novelWriter, la version {0}. Ceci est la version {1}. Si vous ouvrez quand même ce projet, certaines propriétés ou certains réglages risquent d'être perdus, toutefois le projet dans son ensemble devrait être intact. Voulez-vous quand même ouvrir ce projet ?</translation>
+      <translation>Ce projet a été enregistré par une version plus récente de novelWriter, la version {0}. Ceci est la version {1}. Si vous ouvrez quand même ce projet, certaines propriétés ou certains réglages risquent d&apos;être perdus, toutefois le projet dans son ensemble devrait être intact. Voulez-vous quand même ouvrir ce projet ?</translation>
     </message>
     <message>
       <location filename="../novelwriter/core/project.py"/>
@@ -4323,7 +4323,7 @@
     <message>
       <location filename="../novelwriter/core/project.py"/>
       <source>Could not create backup folder.</source>
-      <translation>Il n'a pas été possible de créer le répertoire de sauvegarde.</translation>
+      <translation>Il n&apos;a pas été possible de créer le répertoire de sauvegarde.</translation>
     </message>
     <message>
       <location filename="../novelwriter/core/project.py"/>
@@ -4333,7 +4333,7 @@
     <message>
       <location filename="../novelwriter/core/project.py"/>
       <source>Could not write backup archive.</source>
-      <translation>Il n'a pas été possible d'écrire l'archive de sauvegarde.</translation>
+      <translation>Il n&apos;a pas été possible d&apos;écrire l&apos;archive de sauvegarde.</translation>
     </message>
     <message>
       <location filename="../novelwriter/core/project.py"/>
@@ -5218,7 +5218,7 @@
     <message>
       <location filename="../novelwriter/gui/search.py"/>
       <source>Filters</source>
-      <translation type="unfinished">Filtres</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../novelwriter/gui/search.py"/>
@@ -5284,7 +5284,7 @@
     <message>
       <location filename="../novelwriter/manuscript/manuscript.py"/>
       <source>Value</source>
-      <translation type="unfinished">Valeur</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
