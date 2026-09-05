@@ -93,11 +93,24 @@ def testConfig_Constructor(monkeypatch):
 
 
 @pytest.mark.base
-def testConfig_BuildMeta():
+def testConfig_BuildMeta(monkeypatch, caplog):
     """Test parsing of the build meta.toml file against the repo's
     checked-in placeholder, which is populated by the build scripts.
     """
     conf = Config()
+    assert conf.buildTime == ""
+    assert conf.buildType == "testing"
+    assert conf.buildFormat == "source"
+    assert conf.installSource == "repository"
+
+    # An error while reading the file must be caught and logged, and
+    # must leave the previously parsed values untouched
+    with monkeypatch.context() as mp:
+        mp.setattr("builtins.open", causeOSError)
+        caplog.clear()
+        conf._parseBuildMeta()
+        assert "OSError" in caplog.text
+
     assert conf.buildTime == ""
     assert conf.buildType == "testing"
     assert conf.buildFormat == "source"
