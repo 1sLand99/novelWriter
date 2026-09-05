@@ -17,9 +17,9 @@ echo ""
 echo " Building Packages"
 echo "================================================================================"
 echo ""
-uv build
+uv run pkgutils.py build-pypi
 mkdir -pv dist_upload
-cp -v dist/novelwriter-*.whl dist_upload/
+cp -v dist_pypi/novelwriter-*.whl dist_upload/
 cd dist_upload
 FILE=$(ls -t | head -1)
 shasum -a 256 $FILE | tee $FILE.sha256

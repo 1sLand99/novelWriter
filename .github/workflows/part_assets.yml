@@ -1,4 +1,4 @@
-name: Part-Assets
+name: Part Assets
 
 on:
   workflow_call:

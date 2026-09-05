@@ -369,6 +369,15 @@ class GuiMain(QMainWindow):
                 ),
             ])
 
+            if CONFIG.installSource == "launchpad":  # pragma: no cover
+                SHARED.info(
+                    "Your version of novelWriter was installed from the Ubuntu Launcpad PPA repository. "
+                    "This install method is deprecated, and will soon stop working. "
+                    "See <a href='https://novelwriter.io/download/install_linux.html'>Installing on Linux</a> "
+                    "for information on how to migrate.",
+                    log=False,
+                )
+
     ##
     #  Project Actions
     ##

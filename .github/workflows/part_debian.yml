@@ -1,4 +1,4 @@
-name: Part-Debian
+name: Part Debian
 
 on:
   workflow_call:
@@ -52,7 +52,7 @@ jobs:
         run: apt-get install -y $(python3 pkgutils.py build-deb-depends ${{ inputs.codename }})
 
       - name: Build Package
-        run: python3 pkgutils.py build-deb ${{ inputs.codename }} --build ${{ inputs.build_number }}
+        run: python3 pkgutils.py build-deb ${{ inputs.codename }} --build ${{ inputs.build_number }} --install-source Cloudsmith
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7

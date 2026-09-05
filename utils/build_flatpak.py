@@ -39,6 +39,7 @@ from utils.common import (
     makeCheckSum,
     readFile,
     toUpload,
+    updateMetaFile,
     writeFile,
 )
 
@@ -172,6 +173,7 @@ def flatpak(args: argparse.Namespace) -> None:
     processDependencies(bldDir)
     processEnchant(bldDir, enchantVersion)
     writeFile(bldDir / "novelwriter.appdata.xml", appdataXml())
+    updateMetaFile(bldDir / "meta.toml", buildFormat="flatpak", installSource="github")
 
     template = readFile(ROOT_DIR / "setup" / "flatpak" / "io.novelwriter.novelwriter.yml")
     template = template.replace("@QT_VERSION@", qtVersion)
