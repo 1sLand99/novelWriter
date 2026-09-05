@@ -52,19 +52,21 @@ def isStableVersion() -> bool:
     return hexVers[-2] == "f"
 
 
-def updateMetaFile(buildFormat: str, installSource: str) -> None:
-    """Update the meta.toml file with build information."""
-    metaFile = ROOT_DIR / "novelwriter" / "assets" / "meta.toml"
+def updateMetaFile(metaFile: Path, buildFormat: str, installSource: str) -> None:
+    """Write the meta.toml file with build information to a build folder,
+    ahead of packaging. Must not be used to overwrite the checked-in
+    placeholder file in the source tree.
+    """
     metaFile.write_text(
         META_TEMPLATE.format(
             build_timestamp=datetime.now(tz=LOCAL_TZ).isoformat(timespec="seconds"),
             build_type="stable" if isStableVersion() else "testing",
-            build_format=buildFormat,
-            install_source="repository",
+            build_format=buildFormat.lower(),
+            install_source=installSource.lower(),
         ),
         encoding="utf-8",
     )
-    print("Updated:", metaFile.relative_to(ROOT_DIR), flush=True)
+    print("Wrote:", metaFile.relative_to(ROOT_DIR), flush=True)
 
 
 def extractReqs(groups: list[str]) -> list[str]:

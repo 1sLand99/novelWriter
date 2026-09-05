@@ -147,7 +147,6 @@ def flatpak(args: argparse.Namespace) -> None:
     print("Build Flatpak")
     print("=============")
     print("")
-    updateMetaFile(buildFormat="flatpak", installSource="GitHub")
 
     buildInfo = extractBuildInfo("flatpak")
     qtVersion = buildInfo["qt_version"]
@@ -174,6 +173,7 @@ def flatpak(args: argparse.Namespace) -> None:
     processDependencies(bldDir)
     processEnchant(bldDir, enchantVersion)
     writeFile(bldDir / "novelwriter.appdata.xml", appdataXml())
+    updateMetaFile(bldDir / "meta.toml", buildFormat="flatpak", installSource="github")
 
     template = readFile(ROOT_DIR / "setup" / "flatpak" / "io.novelwriter.novelwriter.yml")
     template = template.replace("@QT_VERSION@", qtVersion)

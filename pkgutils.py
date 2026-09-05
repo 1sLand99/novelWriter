@@ -32,6 +32,7 @@ import utils.build_appimage
 import utils.build_binary
 import utils.build_debian
 import utils.build_flatpak
+import utils.build_pypi
 import utils.build_windows
 import utils.docs
 import utils.icon_themes
@@ -78,6 +79,7 @@ def cleanBuildDirs(args: argparse.Namespace) -> None:
         ROOT_DIR / "dist_doc",
         ROOT_DIR / "dist_flathub",
         ROOT_DIR / "dist_flatpak",
+        ROOT_DIR / "dist_pypi",
         ROOT_DIR / "dist",
         ROOT_DIR / "novelWriter.egg-info",
     ]
@@ -256,6 +258,10 @@ if __name__ == "__main__":
     )
     cmdBuildFlathub.add_argument("path", nargs="?", help="Path to copy the generated files into.")
     cmdBuildFlathub.set_defaults(func=utils.build_flatpak.flathub)
+
+    # Build PyPI Packages
+    cmdBuildPypi = parsers.add_parser("build-pypi", help="Build sdist and wheel packages for PyPI.")
+    cmdBuildPypi.set_defaults(func=utils.build_pypi.pypi)
 
     # Build Windows Inno Setup Installer
     cmdBuildSetupExe = parsers.add_parser(

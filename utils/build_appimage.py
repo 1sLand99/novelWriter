@@ -64,7 +64,6 @@ def appImage(args: argparse.Namespace) -> None:
     print("")
     print("Build AppImage")
     print("=" * 120)
-    updateMetaFile(buildFormat="appimage", installSource="GitHub")
 
     mLinux = args.linux
     mArch = args.arch
@@ -96,6 +95,7 @@ def appImage(args: argparse.Namespace) -> None:
     # Copy novelWriter Source
     print("Copying novelWriter source ...")
     copySourceCode(outDir)
+    updateMetaFile(outDir / "novelwriter" / "assets" / "meta.toml", buildFormat="appimage", installSource="github")
 
     print("Copying or generating additional files ...")
     copyPackageFiles(outDir)

@@ -50,6 +50,7 @@ def prepareCode(outDir: Path) -> None:
     print("")
 
     copySourceCode(outDir)
+    updateMetaFile(outDir / "novelwriter" / "assets" / "meta.toml", buildFormat="windows-setup", installSource="github")
 
     files = [
         ROOT_DIR / "CREDITS.md",
@@ -104,7 +105,6 @@ def main(args: argparse.Namespace) -> None:
     print("Build Standalone Windows Package")
     print("================================")
     print("")
-    updateMetaFile(buildFormat="windows-setup", installSource="GitHub")
 
     numVers, _, _ = extractVersion()
     print(f"Version: {numVers}")
