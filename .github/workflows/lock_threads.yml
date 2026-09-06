@@ -2,7 +2,7 @@ name: Lock Threads
 
 on:
   schedule:
-    - cron: "14 3 */3 * *"
+    - cron: "14 3 * * *"
 
 concurrency:
   group: lock-threads
@@ -12,7 +12,7 @@ jobs:
     name: Lock Old Issues & PRs
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/lock-threads@v6
+      - uses: dessant/lock-threads@89ae32b08ed1a541efecbab17912962a5e38981c # 6.0.2
         with:
           github-token: ${{ secrets.SAGA_SOFT_BOT_TOKEN }}
           issue-inactive-days: 120
@@ -22,10 +22,6 @@ jobs:
             for related bugs or feature requests.
           issue-lock-reason: "resolved"
           pr-inactive-days: 120
-          # pr-comment: >
-          #   This pull request thread has been automatically locked since there
-          #   has not been any recent activity after it was closed. Please open
-          #   an issue for any related bugs or feature requests.
           pr-lock-reason: "resolved"
           process-only: "issue, pr"
           log-output: true
