@@ -84,9 +84,8 @@ LVLC = "{levelname:17}"
 TEXT = "{message:}"
 
 # Read Environment
-FORCE_COLOR = bool(os.environ.get("FORCE_COLOR"))  # Non-empty value forces colour on
-NO_COLOR = bool(os.environ.get("NO_COLOR"))  # Non-empty value forces colour off
-SUPPORTS_COLOR = sys.stdout.isatty()
+FORCE_COLOR = bool(os.environ.get("FORCE_COLOR"))
+NO_COLOR = bool(os.environ.get("NO_COLOR"))
 
 
 def main(sysArgs: list | None = None) -> GuiMain | None:
@@ -159,7 +158,7 @@ def main(sysArgs: list | None = None) -> GuiMain | None:
             fmtLong = True
             logLevel = logging.DEBUG
         elif inOpt in ("-c", "--color"):
-            fmtColor = SUPPORTS_COLOR and not NO_COLOR
+            fmtColor = not NO_COLOR
         elif inOpt == "--meminfo":
             CONFIG.memInfo = True
         elif inOpt == "--config":

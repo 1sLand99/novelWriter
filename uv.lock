@@ -480,6 +480,7 @@ dependencies = [
 [package.dev-dependencies]
 build = [
     { name = "pyyaml" },
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
 dev = [
     { name = "coverage" },
@@ -531,7 +532,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-build = [{ name = "pyyaml" }]
+build = [
+    { name = "pyyaml" },
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
 dev = [
     { name = "coverage", specifier = ">=7.16.0" },
     { name = "docutils", specifier = ">=0.17.1" },
