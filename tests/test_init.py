@@ -144,19 +144,50 @@ def testInit_Options(monkeypatch, fncPath):
         return fmt
 
     # Log Levels w/Color
+    with monkeypatch.context() as mp:
+        mp.setattr("novelwriter.SUPPORTS_COLOR", True)
+
+        clearLogHandlers()
+        with pytest.raises(SystemExit) as ex:
+            main(["--info", "--color", f"--config={fncPath}", f"--data={fncPath}"])
+        assert ex.value.code == 0
+        assert logger.getEffectiveLevel() == logging.INFO
+        assert getFormat() == f"{LVLC}  {TEXT}"
+
+        clearLogHandlers()
+        with pytest.raises(SystemExit) as ex:
+            main(["--debug", "--color", f"--config={fncPath}", f"--data={fncPath}"])
+        assert ex.value.code == 0
+        assert logger.getEffectiveLevel() == logging.DEBUG
+        assert getFormat() == f"{TIME}  {BLUE}{FILE}{END}:{WHITE}{LINE}{END}  {LVLC}  {TEXT}"
+
+    # Color Without a Terminal
     clearLogHandlers()
     with pytest.raises(SystemExit) as ex:
         main(["--info", "--color", f"--config={fncPath}", f"--data={fncPath}"])
     assert ex.value.code == 0
-    assert logger.getEffectiveLevel() == logging.INFO
-    assert getFormat() == f"{LVLC}  {TEXT}"
+    assert getFormat() == f"{LVLP}  {TEXT}"
 
-    clearLogHandlers()
-    with pytest.raises(SystemExit) as ex:
-        main(["--debug", "--color", f"--config={fncPath}", f"--data={fncPath}"])
-    assert ex.value.code == 0
-    assert logger.getEffectiveLevel() == logging.DEBUG
-    assert getFormat() == f"{TIME}  {BLUE}{FILE}{END}:{WHITE}{LINE}{END}  {LVLC}  {TEXT}"
+    # Color Forced via Environment
+    with monkeypatch.context() as mp:
+        mp.setattr("novelwriter.FORCE_COLOR", True)
+
+        clearLogHandlers()
+        with pytest.raises(SystemExit) as ex:
+            main(["--info", f"--config={fncPath}", f"--data={fncPath}"])
+        assert ex.value.code == 0
+        assert getFormat() == f"{LVLC}  {TEXT}"
+
+    # Color Blocked via Environment
+    with monkeypatch.context() as mp:
+        mp.setattr("novelwriter.SUPPORTS_COLOR", True)
+        mp.setattr("novelwriter.NO_COLOR", True)
+
+        clearLogHandlers()
+        with pytest.raises(SystemExit) as ex:
+            main(["--info", "--color", f"--config={fncPath}", f"--data={fncPath}"])
+        assert ex.value.code == 0
+        assert getFormat() == f"{LVLP}  {TEXT}"
 
     # Log Levels wo/Color
     clearLogHandlers()
