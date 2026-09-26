@@ -1,5 +1,40 @@
 # novelWriter Changelog
 
+## Version 2026.2.1 [2026-09-26]
+
+### Release Notes
+
+This is a patch release that fixes the tag hover card icons in the editor and viewer not updating
+when the app theme changed. It also adds build metadata used in crash reports and to warn users
+who installed via the now deprecated Launchpad PPA. French and Russian translations have been
+updated.
+
+See the website for complete [Release Notes](https://novelwriter.io/releases/release_26_2.html).
+
+### Detailed Changelog
+
+**Bugfixes**
+
+* Fixed the tag hover card icons in the editor and viewer not updating when the app theme changed.
+  By @vkbo. Issue #3024. PR #3030.
+
+**Packaging**
+
+* Added build metadata to packages, included in crash reports to aid debugging, and used to warn
+  users who installed via the now deprecated Launchpad PPA. By @vkbo. PR #3009.
+
+**Code Maintenance**
+
+* Improved the pkgutils CLI tool with i18n file validation and coloured terminal output. By @vkbo.
+  PR #3031.
+
+**Internationalisation**
+
+* French translation updated by Amethystium69 and aaribaud. PR #3032.
+* Russian translation updated by Kuro Ryuu and konstruktiv. PR #3032.
+
+----
+
 ## Version 2026.2 [2026-09-05]
 
 ### Release Notes
