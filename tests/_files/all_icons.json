@@ -26,6 +26,7 @@
 
     "fmt_bold",
     "fmt_italic",
+    "fmt_link",
     "fmt_mark",
     "fmt_size",
     "fmt_strike",

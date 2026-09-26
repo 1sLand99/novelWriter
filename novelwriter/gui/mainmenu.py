@@ -662,6 +662,11 @@ class GuiMainMenu(QMenuBar):
         self.aFmtMark.triggered.connect(qtWeakLambda(self._emitDocAction, nwDocAction.MD_MARK))
         self.mainGui.addAction(self.aFmtStrike)
 
+        # Format > Link
+        self.aFmtLink = qtAddAction(self.fmtMenu, self.tr("Link"))
+        self.aFmtLink.triggered.connect(qtWeakLambda(self._emitDocAction, nwDocAction.MD_LINK))
+        self.mainGui.addAction(self.aFmtLink)
+
         # Edit > Separator
         self.fmtMenu.addSeparator()
 

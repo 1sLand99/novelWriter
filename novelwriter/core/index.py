@@ -490,7 +490,7 @@ class Index:
         """
         isValid, tBits, _ = self.scanThis(line)
         if not isValid or len(tBits) < 2:
-            logger.warning("Skipping keyword with %d value(s) in '%s'", len(tBits), tHandle)
+            logger.warning("Skipping keyword with %d value(s) in '%s'", len(tBits) - 1, tHandle)
             return
 
         if tBits[0] not in nwKeyWords.VALID_KEYS:

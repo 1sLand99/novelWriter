@@ -21,7 +21,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-from typing import Final
+from typing import ClassVar
 
 from PyQt6.QtCore import QT_TRANSLATE_NOOP, QCoreApplication
 
@@ -70,7 +70,7 @@ class nwConst:
 class nwRegEx:
     """Common RegExes."""
 
-    URL = r"\bhttps?://(?:www\.|(?!www))[\w/()@:%_\+-.~#!?&=]+\b"
+    URL = r"\b(?:https?|file)://(?:www\.|(?!www))[\w/()@:%_\+-.~#!?&=]+\b"
     WORDS = r"\b[^\s\-\+\/–—\[\]:]+\b"  # noqa: RUF001
     BREAK = r"(?i)(?<!\\)(\[br\]\n?)"
     FMT_IT = r"(?<![\w\\])(_)(?![\s_])(.+?)(?<![\s\\])(\1)(?!\w)"
@@ -78,6 +78,7 @@ class nwRegEx:
     FMT_B2 = r"(?<![\w\\])(\*{2})(?![\s\*])(.+?)(?<![\s\\])(\1)(?!\w)"
     FMT_ST = r"(?<![\w\\])(~{2})(?![\s~])(.+?)(?<![\s\\])(\1)(?!\w)"
     FMT_HL = r"(?<![\w\\])(={2})(?![\s=])(.+?)(?<![\s\\])(\1)(?!\w)"
+    FMT_LN = r"(?<!\\)(\[)([^\[\]]+)(?<!\\)(\]\()([^\s()]+)(?<!\\)(\))"
     FMT_SC = r"(?i)(?<!\\)(\[(?:b|/b|i|/i|s|/s|u|/u|m|/m|sup|/sup|sub|/sub|br)\])"
     FMT_SV = r"(?i)(?<!\\)(\[(?:footnote|field):)(.+?)(?<!\\)(\])"
 
@@ -104,7 +105,7 @@ class nwShortcode:
     FOOTNOTE_B = "[footnote:"
     FIELD_B = "[field:"
 
-    COMMENT_STYLES: Final[dict[nwComment, str]] = {
+    COMMENT_STYLES: ClassVar[dict[nwComment, str]] = {
         nwComment.FOOTNOTE: "[footnote:{0}]",
         nwComment.COMMENT: "[comment:{0}]",
     }
@@ -116,13 +117,13 @@ class nwStyles:
     """Style Settings for Headings."""
 
     H_VALID = ("H0", "H1", "H2", "H3", "H4")
-    H_LEVEL: Final[dict[str, int]] = {"H0": 0, "H1": 1, "H2": 2, "H3": 3, "H4": 4}
-    H_SIZES: Final[dict[int, float]] = {0: 2.50, 1: 2.00, 2: 1.75, 3: 1.50, 4: 1.25}
+    H_LEVEL: ClassVar[dict[str, int]] = {"H0": 0, "H1": 1, "H2": 2, "H3": 3, "H4": 4}
+    H_SIZES: ClassVar[dict[int, float]] = {0: 2.50, 1: 2.00, 2: 1.75, 3: 1.50, 4: 1.25}
 
     T_NORMAL = 1.0
     T_SMALL = 0.8
 
-    T_LABEL: Final[dict[str, str]] = {
+    T_LABEL: ClassVar[dict[str, str]] = {
         "H0": QT_TRANSLATE_NOOP("Constant", "Title"),
         "H1": QT_TRANSLATE_NOOP("Constant", "Heading 1 (Partition)"),
         "H2": QT_TRANSLATE_NOOP("Constant", "Heading 2 (Chapter)"),
@@ -131,7 +132,7 @@ class nwStyles:
         "TT": QT_TRANSLATE_NOOP("Constant", "Text Paragraph"),
         "SP": QT_TRANSLATE_NOOP("Constant", "Scene Separator"),
     }
-    T_MARGIN: Final[dict[str, tuple[float, float]]] = {
+    T_MARGIN: ClassVar[dict[str, tuple[float, float]]] = {
         "H0": (1.50, 0.60),  # Title margins (top, bottom)
         "H1": (1.50, 0.60),  # Heading 1 margins (top, bottom)
         "H2": (1.50, 0.60),  # Heading 2 margins (top, bottom)
@@ -183,7 +184,7 @@ class nwKeyWords:
     MENTION_KEY = "@mention"
 
     # Note: The order here affects the order of menu entries
-    ALL_KEYS: Final[list[str]] = [
+    ALL_KEYS: ClassVar[list[str]] = [
         TAG_KEY,
         POV_KEY,
         FOCUS_KEY,
@@ -197,7 +198,7 @@ class nwKeyWords:
         STORY_KEY,
         MENTION_KEY,
     ]
-    CAN_CREATE: Final[list[str]] = [
+    CAN_CREATE: ClassVar[list[str]] = [
         POV_KEY,
         FOCUS_KEY,
         CHAR_KEY,
@@ -208,7 +209,7 @@ class nwKeyWords:
         ENTITY_KEY,
         CUSTOM_KEY,
     ]
-    CAN_LOOKUP: Final[list[str]] = [
+    CAN_LOOKUP: ClassVar[list[str]] = [
         POV_KEY,
         FOCUS_KEY,
         CHAR_KEY,
@@ -223,10 +224,10 @@ class nwKeyWords:
     ]
 
     # Set of Valid Keys
-    VALID_KEYS: Final[set[str]] = set(ALL_KEYS)
+    VALID_KEYS: ClassVar[set[str]] = set(ALL_KEYS)
 
     # Map from Keys to Item Class
-    KEY_CLASS: Final[dict[str, nwItemClass]] = {
+    KEY_CLASS: ClassVar[dict[str, nwItemClass]] = {
         POV_KEY: nwItemClass.CHARACTER,
         FOCUS_KEY: nwItemClass.CHARACTER,
         CHAR_KEY: nwItemClass.CHARACTER,
@@ -243,7 +244,7 @@ class nwKeyWords:
 class nwLists:
     """Various Lists."""
 
-    USER_CLASSES: Final[list[nwItemClass]] = [
+    USER_CLASSES: ClassVar[list[nwItemClass]] = [
         nwItemClass.CHARACTER,
         nwItemClass.PLOT,
         nwItemClass.WORLD,
@@ -272,7 +273,7 @@ class nwStats:
     DIALOG_RATIO = "dialogRatio"
 
     # Note: The order here affects the order of menu entries
-    ALL_FIELDS: Final[list[str]] = [
+    ALL_FIELDS: ClassVar[list[str]] = [
         WORDS,
         WORDS_TEXT,
         WORDS_TITLE,
@@ -290,7 +291,7 @@ class nwStats:
 class nwLabels:
     """Various Common GUI Labels."""
 
-    CLASS_NAME: Final[dict[nwItemClass, str]] = {
+    CLASS_NAME: ClassVar[dict[nwItemClass, str]] = {
         nwItemClass.NO_CLASS: QT_TRANSLATE_NOOP("Constant", "None"),
         nwItemClass.NOVEL: QT_TRANSLATE_NOOP("Constant", "Novel"),
         nwItemClass.PLOT: QT_TRANSLATE_NOOP("Constant", "Plot"),
@@ -304,7 +305,7 @@ class nwLabels:
         nwItemClass.TEMPLATE: QT_TRANSLATE_NOOP("Constant", "Templates"),
         nwItemClass.TRASH: QT_TRANSLATE_NOOP("Constant", "Trash"),
     }
-    CLASS_ICON: Final[dict[nwItemClass, str]] = {
+    CLASS_ICON: ClassVar[dict[nwItemClass, str]] = {
         nwItemClass.NO_CLASS: "cls_none:root",
         nwItemClass.NOVEL: "cls_novel:root",
         nwItemClass.PLOT: "cls_plot:root",
@@ -318,12 +319,12 @@ class nwLabels:
         nwItemClass.TEMPLATE: "cls_template:root",
         nwItemClass.TRASH: "cls_trash:root",
     }
-    LAYOUT_NAME: Final[dict[nwItemLayout, str]] = {
+    LAYOUT_NAME: ClassVar[dict[nwItemLayout, str]] = {
         nwItemLayout.NO_LAYOUT: QT_TRANSLATE_NOOP("Constant", "None"),
         nwItemLayout.DOCUMENT: QT_TRANSLATE_NOOP("Constant", "Novel Document"),
         nwItemLayout.NOTE: QT_TRANSLATE_NOOP("Constant", "Project Note"),
     }
-    ITEM_DESCRIPTION: Final[dict[str, str]] = {
+    ITEM_DESCRIPTION: ClassVar[dict[str, str]] = {
         "none": QT_TRANSLATE_NOOP("Constant", "None"),
         "root": QT_TRANSLATE_NOOP("Constant", "Root Folder"),
         "folder": QT_TRANSLATE_NOOP("Constant", "Folder"),
@@ -334,11 +335,11 @@ class nwLabels:
         "doc_h4": QT_TRANSLATE_NOOP("Constant", "Novel Section"),
         "note": QT_TRANSLATE_NOOP("Constant", "Project Note"),
     }
-    ACTIVE_NAME: Final[dict[bool, str]] = {
+    ACTIVE_NAME: ClassVar[dict[bool, str]] = {
         True: QT_TRANSLATE_NOOP("Constant", "Active"),
         False: QT_TRANSLATE_NOOP("Constant", "Inactive"),
     }
-    KEY_NAME: Final[dict[str, str]] = {
+    KEY_NAME: ClassVar[dict[str, str]] = {
         nwKeyWords.TAG_KEY: QT_TRANSLATE_NOOP("Constant", "Tag"),
         nwKeyWords.POV_KEY: QT_TRANSLATE_NOOP("Constant", "Point of View"),
         nwKeyWords.FOCUS_KEY: QT_TRANSLATE_NOOP("Constant", "Focus"),
@@ -352,7 +353,7 @@ class nwLabels:
         nwKeyWords.STORY_KEY: QT_TRANSLATE_NOOP("Constant", "Story"),
         nwKeyWords.MENTION_KEY: QT_TRANSLATE_NOOP("Constant", "Mentions"),
     }
-    KEY_SHORTCUT: Final[dict[str, str]] = {
+    KEY_SHORTCUT: ClassVar[dict[str, str]] = {
         nwKeyWords.TAG_KEY: "Ctrl+K, G",
         nwKeyWords.POV_KEY: "Ctrl+K, V",
         nwKeyWords.FOCUS_KEY: "Ctrl+K, F",
@@ -366,7 +367,7 @@ class nwLabels:
         nwKeyWords.STORY_KEY: "Ctrl+K, N",
         nwKeyWords.MENTION_KEY: "Ctrl+K, M",
     }
-    OUTLINE_COLS: Final[dict[nwOutline, str]] = {
+    OUTLINE_COLS: ClassVar[dict[nwOutline, str]] = {
         nwOutline.TITLE: QT_TRANSLATE_NOOP("Constant", "Title"),
         nwOutline.LEVEL: QT_TRANSLATE_NOOP("Constant", "Level"),
         nwOutline.LABEL: QT_TRANSLATE_NOOP("Constant", "Document"),
@@ -388,7 +389,7 @@ class nwLabels:
         nwOutline.MENTION: KEY_NAME[nwKeyWords.MENTION_KEY],
         nwOutline.SYNOP: QT_TRANSLATE_NOOP("Constant", "Synopsis"),
     }
-    STATS_NAME: Final[dict[str, str]] = {
+    STATS_NAME: ClassVar[dict[str, str]] = {
         nwStats.CHARS: QT_TRANSLATE_NOOP("Stats", "Characters"),
         nwStats.CHARS_TEXT: QT_TRANSLATE_NOOP("Stats", "Characters in text"),
         nwStats.CHARS_TITLE: QT_TRANSLATE_NOOP("Stats", "Characters in headings"),
@@ -403,11 +404,11 @@ class nwLabels:
         nwStats.WORDS_TITLE: QT_TRANSLATE_NOOP("Stats", "Words in headings"),
         nwStats.DIALOG_RATIO: QT_TRANSLATE_NOOP("Stats", "Dialogue"),
     }
-    STATS_DISPLAY: Final[dict[str, str]] = {
+    STATS_DISPLAY: ClassVar[dict[str, str]] = {
         nwStats.CHARS: QT_TRANSLATE_NOOP("Stats", "Characters: {0} ({1})"),
         nwStats.WORDS: QT_TRANSLATE_NOOP("Stats", "Words: {0} ({1})"),
     }
-    BUILD_FMT: Final[dict[nwBuildFmt, str]] = {
+    BUILD_FMT: ClassVar[dict[nwBuildFmt, str]] = {
         nwBuildFmt.ODT: QT_TRANSLATE_NOOP("Constant", "Open Document (.odt)"),
         nwBuildFmt.FODT: QT_TRANSLATE_NOOP("Constant", "Flat Open Document (.fodt)"),
         nwBuildFmt.DOCX: QT_TRANSLATE_NOOP("Constant", "Microsoft Word Document (.docx)"),
@@ -420,7 +421,7 @@ class nwLabels:
         nwBuildFmt.J_HTML: QT_TRANSLATE_NOOP("Constant", "JSON + HTML 5 (.json)"),
         nwBuildFmt.J_NWD: QT_TRANSLATE_NOOP("Constant", "JSON + novelWriter Markup (.json)"),
     }
-    BUILD_EXT: Final[dict[nwBuildFmt, str]] = {
+    BUILD_EXT: ClassVar[dict[nwBuildFmt, str]] = {
         nwBuildFmt.ODT: ".odt",
         nwBuildFmt.FODT: ".fodt",
         nwBuildFmt.DOCX: ".docx",
@@ -433,7 +434,7 @@ class nwLabels:
         nwBuildFmt.J_HTML: ".json",
         nwBuildFmt.J_NWD: ".json",
     }
-    SHAPES_PLAIN: Final[dict[nwStatusShape, str]] = {
+    SHAPES_PLAIN: ClassVar[dict[nwStatusShape, str]] = {
         nwStatusShape.SQUARE: QT_TRANSLATE_NOOP("Constant", "Square"),
         nwStatusShape.TRIANGLE: QT_TRANSLATE_NOOP("Constant", "Triangle"),
         nwStatusShape.NABLA: QT_TRANSLATE_NOOP("Constant", "Nabla"),
@@ -443,41 +444,41 @@ class nwLabels:
         nwStatusShape.STAR: QT_TRANSLATE_NOOP("Constant", "Star"),
         nwStatusShape.PACMAN: QT_TRANSLATE_NOOP("Constant", "Pacman"),
     }
-    SHAPES_CIRCLE: Final[dict[nwStatusShape, str]] = {
+    SHAPES_CIRCLE: ClassVar[dict[nwStatusShape, str]] = {
         nwStatusShape.CIRCLE_Q: QT_TRANSLATE_NOOP("Constant", "1/4 Circle"),
         nwStatusShape.CIRCLE_H: QT_TRANSLATE_NOOP("Constant", "Half Circle"),
         nwStatusShape.CIRCLE_T: QT_TRANSLATE_NOOP("Constant", "3/4 Circle"),
         nwStatusShape.CIRCLE: QT_TRANSLATE_NOOP("Constant", "Full Circle"),
     }
-    SHAPES_BARS: Final[dict[nwStatusShape, str]] = {
+    SHAPES_BARS: ClassVar[dict[nwStatusShape, str]] = {
         nwStatusShape.BARS_1: QT_TRANSLATE_NOOP("Constant", "1 Bar"),
         nwStatusShape.BARS_2: QT_TRANSLATE_NOOP("Constant", "2 Bars"),
         nwStatusShape.BARS_3: QT_TRANSLATE_NOOP("Constant", "3 Bars"),
         nwStatusShape.BARS_4: QT_TRANSLATE_NOOP("Constant", "4 Bars"),
     }
-    SHAPES_BLOCKS: Final[dict[nwStatusShape, str]] = {
+    SHAPES_BLOCKS: ClassVar[dict[nwStatusShape, str]] = {
         nwStatusShape.BLOCK_1: QT_TRANSLATE_NOOP("Constant", "1 Block"),
         nwStatusShape.BLOCK_2: QT_TRANSLATE_NOOP("Constant", "2 Blocks"),
         nwStatusShape.BLOCK_3: QT_TRANSLATE_NOOP("Constant", "3 Blocks"),
         nwStatusShape.BLOCK_4: QT_TRANSLATE_NOOP("Constant", "4 Blocks"),
     }
-    FILE_FILTERS: Final[dict[str, str]] = {
+    FILE_FILTERS: ClassVar[dict[str, str]] = {
         "*.txt": QT_TRANSLATE_NOOP("Constant", "Text files"),
         "*.md": QT_TRANSLATE_NOOP("Constant", "Markdown files"),
         "*.csv": QT_TRANSLATE_NOOP("Constant", "CSV files"),
         "*": QT_TRANSLATE_NOOP("Constant", "All files"),
     }
-    UNIT_NAME: Final[dict[str, str]] = {
+    UNIT_NAME: ClassVar[dict[str, str]] = {
         "mm": QT_TRANSLATE_NOOP("Constant", "Millimetres"),
         "cm": QT_TRANSLATE_NOOP("Constant", "Centimetres"),
         "in": QT_TRANSLATE_NOOP("Constant", "Inches"),
     }
-    UNIT_SCALE: Final[dict[str, float]] = {
+    UNIT_SCALE: ClassVar[dict[str, float]] = {
         "mm": 1.0,
         "cm": 10.0,
         "in": 25.4,
     }
-    PAPER_NAME: Final[dict[str, str]] = {
+    PAPER_NAME: ClassVar[dict[str, str]] = {
         "A4": QT_TRANSLATE_NOOP("Constant", "A4"),
         "A5": QT_TRANSLATE_NOOP("Constant", "A5"),
         "A6": QT_TRANSLATE_NOOP("Constant", "A6"),
@@ -485,7 +486,7 @@ class nwLabels:
         "Letter": QT_TRANSLATE_NOOP("Constant", "US Letter"),
         "Custom": QT_TRANSLATE_NOOP("Constant", "Custom"),
     }
-    PAPER_SIZE: Final[dict[str, tuple[float, float]]] = {
+    PAPER_SIZE: ClassVar[dict[str, tuple[float, float]]] = {
         "A4": (210.0, 297.0),
         "A5": (148.0, 210.0),
         "A6": (105.0, 148.0),
@@ -493,7 +494,7 @@ class nwLabels:
         "Letter": (215.9, 279.4),
         "Custom": (-1.0, -1.0),
     }
-    THEME_COLORS: Final[dict[str, str]] = {
+    THEME_COLORS: ClassVar[dict[str, str]] = {
         "default": QT_TRANSLATE_NOOP("Constant", "Foreground Colour"),
         "base": QT_TRANSLATE_NOOP("Constant", "Background Colour"),
         "faded": QT_TRANSLATE_NOOP("Constant", "Faded Colour"),
@@ -505,27 +506,27 @@ class nwLabels:
         "blue": QT_TRANSLATE_NOOP("Constant", "Blue"),
         "purple": QT_TRANSLATE_NOOP("Constant", "Purple"),
     }
-    THEME_MODE_ICON: Final[dict[nwTheme, str]] = {
+    THEME_MODE_ICON: ClassVar[dict[nwTheme, str]] = {
         nwTheme.AUTO: "theme_auto:sidebar",
         nwTheme.LIGHT: "theme_light:sidebar",
         nwTheme.DARK: "theme_dark:sidebar",
     }
-    THEME_MODE_LABEL: Final[dict[nwTheme, str]] = {
+    THEME_MODE_LABEL: ClassVar[dict[nwTheme, str]] = {
         nwTheme.AUTO: QT_TRANSLATE_NOOP("Constant", "System Theme"),
         nwTheme.LIGHT: QT_TRANSLATE_NOOP("Constant", "Light Theme"),
         nwTheme.DARK: QT_TRANSLATE_NOOP("Constant", "Dark Theme"),
     }
-    BACKUP_INTERVAL: Final[dict[str, str]] = {
+    BACKUP_INTERVAL: ClassVar[dict[str, str]] = {
         "session": QT_TRANSLATE_NOOP("Constant", "Per Session"),
         "day": QT_TRANSLATE_NOOP("Constant", "Per Day"),
         "week": QT_TRANSLATE_NOOP("Constant", "Per Week"),
         "month": QT_TRANSLATE_NOOP("Constant", "Per Month"),
     }
-    FILTER_GROUPS: Final[dict[str, str]] = {
+    FILTER_GROUPS: ClassVar[dict[str, str]] = {
         "documents": QT_TRANSLATE_NOOP("Constant", "Document Filters"),
         "content": QT_TRANSLATE_NOOP("Constant", "Content Filters"),
     }
-    FILTER_TYPES: Final[dict[str, str]] = {
+    FILTER_TYPES: ClassVar[dict[str, str]] = {
         "novel": QT_TRANSLATE_NOOP("Constant", "Novel documents"),
         "notes": QT_TRANSLATE_NOOP("Constant", "Project notes"),
         "inactive": QT_TRANSLATE_NOOP("Constant", "Inactive documents"),
@@ -551,7 +552,7 @@ class nwHeadFmt:
     CHAR_FOCUS = "{Char:Focus}"
     HRULE = "----"
 
-    PAGE_HEADERS: Final[list[str]] = [
+    PAGE_HEADERS: ClassVar[list[str]] = [
         TITLE,
         CH_NUM,
         CH_WORD,
@@ -576,7 +577,7 @@ class nwQuotes:
     Source: https://en.wikipedia.org/wiki/Quotation_mark
     """
 
-    SYMBOLS: Final[dict[str, str]] = {
+    SYMBOLS: ClassVar[dict[str, str]] = {
         "\u0027": QT_TRANSLATE_NOOP("Constant", "Straight single quotation mark"),
         "\u0022": QT_TRANSLATE_NOOP("Constant", "Straight double quotation mark"),
         "\u2018": QT_TRANSLATE_NOOP("Constant", "Left single quotation mark"),
@@ -598,14 +599,14 @@ class nwQuotes:
         "\u300f": QT_TRANSLATE_NOOP("Constant", "Right white corner bracket"),
     }
 
-    DASHES: Final[dict[str, str]] = {
+    DASHES: ClassVar[dict[str, str]] = {
         "": QT_TRANSLATE_NOOP("Constant", "None"),
         "\u2013": QT_TRANSLATE_NOOP("Constant", "Short dash"),
         "\u2014": QT_TRANSLATE_NOOP("Constant", "Long dash"),
         "\u2015": QT_TRANSLATE_NOOP("Constant", "Horizontal bar"),
     }
 
-    ALLOWED: Final[list[str]] = [
+    ALLOWED: ClassVar[list[str]] = [
         "\u0027",
         "\u0022",
         "\u2018",
@@ -754,7 +755,7 @@ class nwUnicode:
     H_DIVIDE = "&divide;"
 
     # Unicode symbols expected to be used on the UI
-    UI_SYMBOLS: Final[list[str]] = [
+    UI_SYMBOLS: ClassVar[list[str]] = [
         U_QUOT,
         U_APOS,
         U_LAQUO,
@@ -806,7 +807,7 @@ class nwUnicode:
 class nwHtmlUnicode:
     """Unicode to HTML Map."""
 
-    U_TO_H: Final[dict[str, str]] = {
+    U_TO_H: ClassVar[dict[str, str]] = {
         # Quotes
         nwUnicode.U_QUOT: nwUnicode.H_QUOT,
         nwUnicode.U_APOS: nwUnicode.H_APOS,

@@ -64,6 +64,8 @@ def testTextPatterns_Urls():
         "http://www.www.www.example.com/",
         "https://example.com",
         "https://www.example.com/",
+        "file:///path/to/file.txt",
+        "file://localhost/path/to/file.txt",
     ]
     invalid = [
         "hppt://example.com/",
@@ -71,6 +73,7 @@ def testTextPatterns_Urls():
         "http:/example.com/",
         "http://www example com/",
         "http://www\texample\tcom/",
+        "file:/path/to/file.txt",
     ]
 
     for test in valid:

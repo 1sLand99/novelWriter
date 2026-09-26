@@ -36,6 +36,7 @@ from PyQt6.QtCore import (
     QRect,
     Qt,
     QTimer,
+    QUrl,
     QVariant,
     pyqtSignal,
     pyqtSlot,
@@ -75,6 +76,7 @@ from novelwriter.common import (
 from novelwriter.constants import nwConst, nwKeyWords, nwShortcode, nwStyles, nwUnicode
 from novelwriter.core.document import ProjectDocument
 from novelwriter.dialogs.editlabel import GuiEditLabel
+from novelwriter.dialogs.editlink import GuiEditLink
 from novelwriter.editor.completer import CommandCompleter
 from novelwriter.editor.editordocument import GuiTextDocument
 from novelwriter.editor.editsearch import GuiDocEditSearch
@@ -99,6 +101,7 @@ from novelwriter.extensions.eventfilters import WheelEventFilter
 from novelwriter.formats.fromqdoc import FromQTextDocument
 from novelwriter.text.autoreplace import TextAutoReplace
 from novelwriter.text.formats import processHeading
+from novelwriter.text.patterns import REGEX_PATTERNS
 from novelwriter.tools.lipsum import GuiLipsum
 from novelwriter.types import (
     QAnimDeleteWhenStopped,
@@ -1030,6 +1033,8 @@ class GuiDocEditor(QTextEdit):
             self._toggleFormat(2, "~")
         elif action == nwDocAction.MD_MARK and not noFormat:
             self._toggleFormat(2, "=")
+        elif action == nwDocAction.MD_LINK and not noFormat:
+            self._formatLink()
         elif action == nwDocAction.S_QUOTE:
             self._wrapSelection(CONFIG.fmtSQuoteOpen, CONFIG.fmtSQuoteClose)
         elif action == nwDocAction.D_QUOTE:
@@ -1451,6 +1456,8 @@ class GuiDocEditor(QTextEdit):
 
         if document is not None:
             text = FromQTextDocument(document).convertText().strip("\n")
+        elif urls := source.urls():
+            text = "\n".join(url.toString(QUrl.ComponentFormattingOption.FullyEncoded) for url in urls)
         elif source.hasText():
             text = source.text()
         else:
@@ -2499,6 +2506,51 @@ class GuiDocEditor(QTextEdit):
         self.setTextCursor(cursor)
 
         return True
+
+    def _formatLink(self) -> None:
+        """Format a link under the cursor, or insert a new one. An
+        existing bare URL or Markdown link at the cursor is detected via
+        the block's TextBlockData, and used to pre-fill the edit dialog.
+        """
+        cursor = self.textCursor()
+        block = cursor.block()
+
+        text = ""
+        url = ""
+        posS = posE = cursor.position()
+        if cursor.hasSelection():
+            posS = cursor.selectionStart()
+            posE = cursor.selectionEnd()
+            text = cursor.selectedText()
+
+        if isinstance(data := block.userData(), TextBlockData):
+            check = cursor.position() - block.position()
+            for start, end, mData, mType in data.metaData:
+                if mType in ("url", "link") and start <= check <= end:
+                    posS = block.position() + start
+                    posE = block.position() + end
+                    url = mData
+                    text = ""
+                    if mType == "link":
+                        linkCursor = QTextCursor(self._qDocument)
+                        linkCursor.setPosition(posS)
+                        linkCursor.setPosition(posE, QtKeepAnchor)
+                        if m := REGEX_PATTERNS.markdownLink.match(linkCursor.selectedText()):  # pragma: no branch
+                            text, url = m.group(2), m.group(4)
+                    break
+
+        newText, newUrl, dlgOk = GuiEditLink.getLink(self, text=text, url=url)
+        if not dlgOk or not newUrl:
+            return
+
+        result = f"[{newText}]({newUrl})" if newText else newUrl
+
+        cursor.setPosition(posS)
+        cursor.setPosition(posE, QtKeepAnchor)
+        cursor.beginEditBlock()
+        cursor.insertText(result)
+        cursor.endEditBlock()
+        self.setTextCursor(cursor)
 
     def _iterFormatBlocks(self, action: nwDocAction) -> bool:
         """Iterate over all selected blocks and apply format. If no

@@ -42,6 +42,7 @@ class RegExPatterns:
     _rxBold2 = re.compile(nwRegEx.FMT_B2)
     _rxStrike = re.compile(nwRegEx.FMT_ST)
     _rxMark = re.compile(nwRegEx.FMT_HL)
+    _rxLink = re.compile(nwRegEx.FMT_LN)
     _rxSCPlain = re.compile(nwRegEx.FMT_SC)
     _rxSCValue = re.compile(nwRegEx.FMT_SV)
 
@@ -79,6 +80,11 @@ class RegExPatterns:
     def markdownMark(self) -> re.Pattern:
         """Markdown highlight style."""
         return self._rxMark
+
+    @property
+    def markdownLink(self) -> re.Pattern:
+        """Markdown link style."""
+        return self._rxLink
 
     @property
     def shortcodePlain(self) -> re.Pattern:

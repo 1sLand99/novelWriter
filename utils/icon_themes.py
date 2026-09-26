@@ -74,6 +74,7 @@ ICONS = [
     "fmt_bold",
     "fmt_italic",
     "fmt_mark",
+    "fmt_link",
     "fmt_size",
     "fmt_strike",
     "fmt_subscript",
