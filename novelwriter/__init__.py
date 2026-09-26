@@ -168,9 +168,6 @@ def main(sysArgs: list | None = None) -> GuiMain | None:
         else:  # pragma: no cover
             pass
 
-    if FORCE_COLOR:
-        fmtColor = True
-
     if fmtColor:
         # This will overwrite the default level names, and also ensure that
         # they can be converted back to integer levels
