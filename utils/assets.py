@@ -22,6 +22,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -29,7 +30,7 @@ import zipfile
 
 from pathlib import Path
 
-from utils.common import ROOT_DIR, writeFile
+from utils.common import ROOT_DIR, log, writeFile
 from utils.docs import buildPdfDocAssets
 
 
@@ -62,6 +63,33 @@ def _normaliseTsLocations(tsFile: Path) -> tuple[int, int]:
         tsFile.write_text(f"{header}{xmlBody}\n", encoding="utf-8")
 
     return nLines, nMerged
+
+
+def _validateProjectTranslation(path: Path, expected: int, threshold: float) -> None:
+    """Validate a project translation file."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if (translated := len(data) / expected) >= threshold:
+            log(f"[cg]Accepted:[e] [cw]{100 * translated:5.1f}%[e] {path.name}")
+        else:
+            log(f"[cr]Rejected:[e] [cw]{100 * translated:5.1f}%[e] {path.name}")
+            path.unlink()
+    except Exception:
+        log(f"[cr]ERROR:[e] Could not process file {path}")
+
+
+def _validateTsTranslation(path: Path, expected: int, threshold: float) -> None:
+    """Validate a Qt Linguist translation file."""
+    try:
+        root = ET.parse(path).getroot()
+        unfinished = len(root.findall('.//translation[@type="unfinished"]'))
+        if (translated := (expected - unfinished) / expected) >= threshold:
+            log(f"[cg]Accepted:[e] [cw]{100 * translated:5.1f}%[e] {path.name}")
+        else:
+            log(f"[cr]Rejected:[e] [cw]{100 * translated:5.1f}%[e] {path.name}")
+            path.unlink()
+    except Exception:
+        log(f"[cr]ERROR:[e] Could not process file {path}")
 
 
 def buildSampleZip(args: argparse.Namespace | None = None) -> None:
@@ -109,15 +137,21 @@ def importI18nUpdates(args: argparse.Namespace) -> None:
     dstPath = ROOT_DIR / "novelwriter" / "assets" / "i18n"
     srcPath = ROOT_DIR / "i18n"
 
+    threshold = args.threshold / 100
+    expected_json = len(json.loads((dstPath / "project_en_GB.json").read_text(encoding="utf-8")))
+    expected_ts = len(ET.parse(srcPath / "nw_base.ts").getroot().findall(".//message"))
+
     print(f"Loading file: {fileName}")
     with zipfile.ZipFile(fileName) as zipObj:
         for item in zipObj.namelist():
-            if item.startswith("nw_") and item.endswith(".ts"):
+            if item == "nw_base.ts":
+                print(f"Skipped: {item}")
+            elif item.startswith("nw_") and item.endswith(".ts"):
                 zipObj.extract(item, srcPath)
-                print(f"Extracted: {item} > {srcPath / item}")
+                _validateTsTranslation(srcPath / item, expected_ts, threshold)
             elif item.startswith("project_") and item.endswith(".json"):
                 zipObj.extract(item, dstPath)
-                print(f"Extracted: {item} > {dstPath / item}")
+                _validateProjectTranslation(dstPath / item, expected_json, threshold)
             else:
                 print(f"Skipped: {item}")
 

@@ -21,6 +21,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -44,6 +45,30 @@ type = "{build_type}"
 format = "{build_format}"
 install_source = "{install_source}"
 """
+
+# ANSI Colour Codes
+ANSI_COLOURS = {
+    "[e]": "\033[0m",  # Reset
+    "[b]": "\033[1m",  # Bold
+    "[ck]": "\033[90m",  # Bright black
+    "[cr]": "\033[91m",  # Bright red
+    "[cg]": "\033[92m",  # Bright green
+    "[cy]": "\033[93m",  # Bright yellow
+    "[cb]": "\033[94m",  # Bright blue
+    "[cm]": "\033[95m",  # Bright magenta
+    "[cc]": "\033[96m",  # Bright cyan
+    "[cw]": "\033[97m",  # Bright white
+}
+
+NO_COLOR = bool(os.environ.get("NO_COLOR"))  # Non-empty value forces colour off
+SUPPORTS_COLOUR = sys.stdout.isatty() and not NO_COLOR
+
+
+def log(message: str) -> None:
+    """Print a message to the terminal, translating ANSI colour codes."""
+    for code, ansi in ANSI_COLOURS.items():
+        message = message.replace(code, ansi if SUPPORTS_COLOUR else "")
+    print(message, flush=True)
 
 
 def isStableVersion() -> bool:
