@@ -37,6 +37,7 @@ from utils.common import (
     copySourceCode,
     extractVersion,
     freshFolder,
+    log,
     makeCheckSum,
     removeRedundantQt,
     systemCall,
@@ -51,19 +52,19 @@ def appImage(args: argparse.Namespace) -> None:
     try:
         import python_appimage  # noqa: F401 # type: ignore
     except ImportError:
-        print(
-            "ERROR: Package 'python-appimage' is missing on this system.\n"
+        log(
+            "[cr]ERROR:[e] Package 'python-appimage' is missing on this system.\n"
             "       Please run 'pip install --user python-appimage' to install it.\n"
         )
         sys.exit(1)
 
     if sys.platform != "linux":
-        print("ERROR: Command 'build-appimage' can only be used on Linux")
+        log("[cr]ERROR:[e] Command 'build-appimage' can only be used on Linux")
         sys.exit(1)
 
-    print("")
-    print("Build AppImage")
-    print("=" * 120)
+    log("")
+    log("[b]Build AppImage[e]")
+    log("[b]" + "=" * 120 + "[e]")
 
     mLinux = args.linux
     mArch = args.arch
@@ -88,16 +89,16 @@ def appImage(args: argparse.Namespace) -> None:
 
     # Remove old AppImages
     if images := bldDir.glob("*.AppImage"):
-        print("Removing old AppImages")
+        log("[b]Removing old AppImages[e]")
         for image in images:
             image.unlink()
 
     # Copy novelWriter Source
-    print("Copying novelWriter source ...")
+    log("[b]Copying novelWriter source ...[e]")
     copySourceCode(outDir)
     updateMetaFile(outDir / "novelwriter" / "assets" / "meta.toml", buildFormat="appimage", installSource="github")
 
-    print("Copying or generating additional files ...")
+    log("[b]Copying or generating additional files ...[e]")
     copyPackageFiles(outDir)
 
     # Write Metadata
@@ -112,10 +113,10 @@ def appImage(args: argparse.Namespace) -> None:
     )
 
     shutil.copyfile(SETUP_DIR / "data" / "novelwriter.desktop", imgDir / "novelwriter.desktop")
-    print("Copied: novelwriter.desktop")
+    log("[cg]Copied:[e] novelwriter.desktop")
 
     shutil.copyfile(SETUP_DIR / "icons" / "novelwriter.png", imgDir / "novelwriter.png")
-    print("Copied: novelwriter.png")
+    log("[cg]Copied:[e] novelwriter.png")
 
     # Build AppDir
     systemCall(

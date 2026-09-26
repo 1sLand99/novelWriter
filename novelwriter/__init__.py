@@ -84,8 +84,9 @@ LVLC = "{levelname:17}"
 TEXT = "{message:}"
 
 # Read Environment
-FORCE_COLOR = bool(os.environ.get("FORCE_COLOR"))
-NO_COLOR = bool(os.environ.get("NO_COLOR"))
+FORCE_COLOR = bool(os.environ.get("FORCE_COLOR"))  # Non-empty value forces colour on
+NO_COLOR = bool(os.environ.get("NO_COLOR"))  # Non-empty value forces colour off
+SUPPORTS_COLOR = sys.stdout.isatty()
 
 
 def main(sysArgs: list | None = None) -> GuiMain | None:
@@ -158,7 +159,7 @@ def main(sysArgs: list | None = None) -> GuiMain | None:
             fmtLong = True
             logLevel = logging.DEBUG
         elif inOpt in ("-c", "--color"):
-            fmtColor = not NO_COLOR
+            fmtColor = SUPPORTS_COLOR and not NO_COLOR
         elif inOpt == "--meminfo":
             CONFIG.memInfo = True
         elif inOpt == "--config":
@@ -167,6 +168,9 @@ def main(sysArgs: list | None = None) -> GuiMain | None:
             dataPath = inArg
         else:  # pragma: no cover
             pass
+
+    if FORCE_COLOR:
+        fmtColor = True
 
     if fmtColor:
         # This will overwrite the default level names, and also ensure that

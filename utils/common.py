@@ -21,6 +21,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -45,6 +46,37 @@ format = "{build_format}"
 install_source = "{install_source}"
 """
 
+# ANSI Colour Codes
+ANSI_COLOURS = {
+    "[e]": "\033[0m",  # Reset
+    "[b]": "\033[1m",  # Bold
+    "[ck]": "\033[90m",  # Bright black
+    "[cr]": "\033[91m",  # Bright red
+    "[cg]": "\033[92m",  # Bright green
+    "[cy]": "\033[93m",  # Bright yellow
+    "[cb]": "\033[94m",  # Bright blue
+    "[cm]": "\033[95m",  # Bright magenta
+    "[cc]": "\033[96m",  # Bright cyan
+    "[cw]": "\033[97m",  # Bright white
+}
+
+NO_COLOR = bool(os.environ.get("NO_COLOR"))  # Non-empty value forces colour off
+SUPPORTS_COLOUR = sys.stdout.isatty() and not NO_COLOR
+
+
+def log(message: str | Path | Exception = "") -> None:
+    """Print a message to the terminal, translating ANSI colour codes."""
+    if isinstance(message, Exception):
+        message = f"[cr]{message.__class__.__name__}:[e] {message!s}"
+    else:
+        message = str(message)
+
+    if message:
+        for code, ansi in ANSI_COLOURS.items():
+            message = message.replace(code, ansi if SUPPORTS_COLOUR else "")
+
+    print(message, flush=True)
+
 
 def isStableVersion() -> bool:
     """Return True if the version is a stable release."""
@@ -66,7 +98,7 @@ def updateMetaFile(metaFile: Path, buildFormat: str, installSource: str) -> None
         ),
         encoding="utf-8",
     )
-    print("Wrote:", metaFile.relative_to(ROOT_DIR), flush=True)
+    log(f"[cg]Wrote:[e] {metaFile.relative_to(ROOT_DIR)}")
 
 
 def extractReqs(groups: list[str]) -> list[str]:
@@ -103,11 +135,11 @@ def extractVersion(beQuiet: bool = False) -> tuple[str, str, str]:
             if aLine.startswith("__date__"):
                 relDate = getValue(aLine)
     except Exception as exc:
-        print(f"Could not read file: {initFile}", flush=True)
-        print(str(exc), flush=True)
+        log(f"[cr]Could not read file:[e] {initFile}")
+        log(exc)
 
     if not beQuiet:
-        print(f"novelWriter version: {numVers} ({hexVers}) at {relDate}", flush=True)
+        log(f"novelWriter version: {numVers} ({hexVers}) at {relDate}")
 
     return numVers, hexVers, relDate
 
@@ -136,8 +168,8 @@ def splitVersion(version: str) -> tuple[int, int, int]:
         if len(parts) > 2:
             patch = int(parts[2])
     except Exception as exc:
-        print(f"Could not split version: {version}", flush=True)
-        print(str(exc), flush=True)
+        log(f"[cr]Could not split version:[e] {version}")
+        log(exc)
     return major, minor, patch
 
 
@@ -162,16 +194,16 @@ def copySourceCode(dst: Path) -> None:
     for item in src.glob("**/*"):
         relSrc = item.relative_to(ROOT_DIR)
         if item.suffix in (".pyc", ".pyo"):
-            print("Ignored:", relSrc, flush=True)
+            log(f"[cy]Ignored:[e] {relSrc}")
             continue
         if item.parent.is_dir() and item.parent.name != "__pycache__":
             dstDir = dst / relSrc.parent
             if not dstDir.exists():
                 dstDir.mkdir(parents=True)
-                print("Created:", dstDir.relative_to(ROOT_DIR), flush=True)
+                log(f"[cg]Created:[e] {dstDir.relative_to(ROOT_DIR)}")
         if item.is_file():
             shutil.copyfile(item, dst / relSrc)
-            print("Copied:", relSrc, flush=True)
+            log(f"[cg]Copied:[e] {relSrc}")
 
 
 def copyTestCode(dst: Path) -> None:
@@ -183,16 +215,16 @@ def copyTestCode(dst: Path) -> None:
         if skipDirs & set(relSrc.parts):
             continue
         if item.suffix in (".pyc", ".pyo"):
-            print("Ignored:", relSrc, flush=True)
+            log(f"[cy]Ignored:[e] {relSrc}")
             continue
         if item.parent.is_dir() and item.parent.name not in skipDirs:
             dstDir = dst / relSrc.parent
             if not dstDir.exists():
                 dstDir.mkdir(parents=True)
-                print("Created:", dstDir.relative_to(ROOT_DIR), flush=True)
+                log(f"[cg]Created:[e] {dstDir.relative_to(ROOT_DIR)}")
         if item.is_file():
             shutil.copyfile(item, dst / relSrc)
-            print("Copied:", relSrc, flush=True)
+            log(f"[cg]Copied:[e] {relSrc}")
 
 
 def copyPackageFiles(dst: Path, oldLicense: bool = False) -> None:
@@ -205,7 +237,7 @@ def copyPackageFiles(dst: Path, oldLicense: bool = False) -> None:
     ]
     for copyFile in copyFiles:
         shutil.copyfile(copyFile, dst / copyFile.name)
-        print("Copied:", copyFile, flush=True)
+        log(f"[cg]Copied:[e] {copyFile}")
 
     text = readFile(ROOT_DIR / "pyproject.toml")
     text = text.replace("setup/description_pypi.md", "data/description_short.txt")
@@ -240,10 +272,10 @@ def makeCheckSum(sumFile: str, cwd: Path | None = None) -> str:
             shaFile = cwd / f"{sumFile}.sha256"
         with open(shaFile, mode="w", encoding="utf-8") as fOut:
             subprocess.call(["shasum", "-a", "256", sumFile], stdout=fOut, cwd=cwd)
-        print(f"SHA256 Sum: {shaFile}", flush=True)
+        log(f"[cg]SHA256 Sum:[e] {shaFile}")
     except Exception as exc:
-        print("Could not generate sha256 file", flush=True)
-        print(str(exc), flush=True)
+        log("[cr]Could not generate sha256 file[e]")
+        log(exc)
         return ""
 
     return str(shaFile)
@@ -257,17 +289,17 @@ def checkAssetsExist() -> bool:
 
     sampleZip = ROOT_DIR / "novelwriter" / "assets" / "sample.zip"
     if sampleZip.is_file():
-        print(f"Found: {sampleZip}", flush=True)
+        log(f"[cg]Found:[e] {sampleZip}")
         hasSample = True
 
     pdfManual = ROOT_DIR / "novelwriter" / "assets" / "manual.pdf"
     if pdfManual.is_file():
-        print(f"Found: {pdfManual}", flush=True)
+        log(f"[cg]Found:[e] {pdfManual}")
         hasManual = True
 
     i18nAssets = ROOT_DIR / "novelwriter" / "assets" / "i18n"
     if len(list(i18nAssets.glob("*.qm"))) > 0:
-        print(f"Found: {i18nAssets}/*.qm", flush=True)
+        log(f"[cg]Found:[e] {i18nAssets}/*.qm")
         hasQmData = True
 
     return hasSample and hasManual and hasQmData
@@ -288,14 +320,14 @@ def readFile(file: Path) -> str:
 def writeFile(file: Path, text: str) -> int:
     """Write string to file."""
     result = file.write_text(text, encoding="utf-8")
-    print("Wrote:", file.relative_to(ROOT_DIR), flush=True)
+    log(f"[cg]Wrote:[e] {file.relative_to(ROOT_DIR)}")
     return result
 
 
 def freshFolder(path: Path) -> None:
     """Make sure a folder exists and is empty."""
     if path.exists():
-        print("Removing:", str(path), flush=True)
+        log(f"[cy]Removing:[e] {path}")
         shutil.rmtree(path)
     path.mkdir()
 
@@ -307,7 +339,7 @@ def systemCall(cmd: list, cwd: Path | str | None = None, env: dict | None = None
     try:
         code = subprocess.call([str(c) for c in cmd], cwd=cwd, env=env)
     except Exception as exc:
-        print("ERROR:", str(exc), flush=True)
+        log(exc)
         sys.exit(1)
     return code
 
@@ -318,12 +350,12 @@ def removeRedundantQt(qtBase: Path) -> None:
     def unlinkIfFound(file: Path) -> None:
         if file.is_file():
             file.unlink()
-            print("Deleted:", file.relative_to(ROOT_DIR), flush=True)
+            log(f"[cy]Deleted:[e] {file.relative_to(ROOT_DIR)}")
 
     def deleteFolder(folder: Path) -> None:
         if folder.is_dir():
             shutil.rmtree(folder)
-            print("Deleted:", folder.relative_to(ROOT_DIR), flush=True)
+            log(f"[cy]Deleted:[e] {folder.relative_to(ROOT_DIR)}")
 
     def unlinkIfPrefix(folder: Path, prefix: tuple[str, ...]) -> None:
         if folder.is_dir():
@@ -334,7 +366,7 @@ def removeRedundantQt(qtBase: Path) -> None:
                     elif item.is_dir():
                         deleteFolder(item)
 
-    print("Deleting redundant files ...")
+    log("[b]Deleting redundant files ...[e]")
 
     pyQt6Dir = qtBase / "PyQt6"
     bindDir = qtBase / "PyQt6" / "bindings"
