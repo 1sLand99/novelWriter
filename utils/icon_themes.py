@@ -30,7 +30,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from utils.common import ROOT_DIR
+from utils.common import ROOT_DIR, log
 
 UTILS = Path(__file__).parent
 ET.register_namespace("", "http://www.w3.org/2000/svg")
@@ -183,7 +183,7 @@ def _loadMap(name: str) -> dict[str, str]:
         if icon := data.get(key, ""):
             icons[key] = icon
         else:
-            print(f"- Missing: {key}")
+            log(f"- [cy]Missing:[e] {key}")
     return icons
 
 
@@ -200,29 +200,29 @@ def _writeThemeFile(path: Path, name: str, author: str, license_: str, icons: di
         for key, svg in icons.items():
             icon = ET.tostring(svg).decode().replace("\n", "")
             out.write(f"icon:{key:<15s} = {icon}\n")
-        print(f"- Wrote: {len(icons)} icons")
-        print(f"- Target: {path.relative_to(UTILS.parent)}")
+        log(f"- [cg]Wrote:[e] {len(icons)} icons")
+        log(f"- Target: {path.relative_to(UTILS.parent)}")
 
 
 def _updateRepo(path: Path, name: str) -> None:
     """Clone or update a local repo of icons."""
-    print(f"Updating: {ICON_SOURCES[name]}")
+    log(f"[b]Updating:[e] {ICON_SOURCES[name]}")
     if not path.is_dir():
         subprocess.call(["git", "clone", ICON_SOURCES[name], "--depth", "1"], cwd=path.parent)
     else:
         subprocess.call(["git", "pull"], cwd=path)
-    print("")
+    log("")
 
 
 def _downloadIconPack(path: Path, name: str) -> None:
     """Download and extract icon pack releases."""
-    print(f"Downloading: {ICON_SOURCES[name]}")
+    log(f"[b]Downloading:[e] {ICON_SOURCES[name]}")
     zipFile = path / f"{name}.zip"
     urllib.request.urlretrieve(ICON_SOURCES[name], zipFile)
-    print(f"Extracting: {zipFile.name}")
+    log(f"[b]Extracting:[e] {zipFile.name}")
     with zipfile.ZipFile(zipFile, "r") as inFile:
         inFile.extractall(path)
-    print("")
+    log("")
 
 
 def processMaterialIcons(workDir: Path, iconsDir: Path, jobs: dict) -> None:
@@ -239,7 +239,7 @@ def processMaterialIcons(workDir: Path, iconsDir: Path, jobs: dict) -> None:
         kind = f"wght{weight}" if weight != 400 else ""
         kind += "fill1" if filled else ""
 
-        print(f"Processing: {name}")
+        log(f"[b]Processing:[e] {name}")
 
         icons: dict[str, ET.Element] = {}
         iconSrc = srcRepo / "symbols" / "web"
@@ -256,12 +256,12 @@ def processMaterialIcons(workDir: Path, iconsDir: Path, jobs: dict) -> None:
                 svg.set("width", "128")
                 icons[key] = svg
             else:
-                print(f"Not Found: {iconFile}")
+                log(f"[cr]Not Found:[e] {iconFile}")
 
         target = iconsDir / f"{file}.icons"
         _writeThemeFile(target, name, "Google Inc", "Apache 2.0", icons)
 
-    print("")
+    log("")
 
 
 def processFontAwesome(workDir: Path, iconsDir: Path, jobs: dict) -> None:
@@ -272,7 +272,7 @@ def processFontAwesome(workDir: Path, iconsDir: Path, jobs: dict) -> None:
 
     for file, job in jobs.items():
         name: str = job["name"]
-        print(f"Processing: {name}")
+        log(f"[b]Processing:[e] {name}")
 
         icons: dict[str, ET.Element] = {}
         iconSrc = srcRepo / "svgs"
@@ -287,7 +287,7 @@ def processFontAwesome(workDir: Path, iconsDir: Path, jobs: dict) -> None:
             elif iconRegular.is_file():
                 iconFile = iconRegular
             else:
-                print(f"Not Found: {icon}.svg")
+                log(f"[cr]Not Found:[e] {icon}.svg")
                 continue
 
             if iconFile.is_file():
@@ -302,13 +302,13 @@ def processFontAwesome(workDir: Path, iconsDir: Path, jobs: dict) -> None:
                 svg.set("width", "128")
                 icons[key] = svg
             else:
-                print(f"Not Found: {icon}.svg")
+                log(f"[cr]Not Found:[e] {icon}.svg")
                 continue
 
         target = iconsDir / f"{file}.icons"
         _writeThemeFile(target, name, "Fonticons Inc", "CC BY 4.0", icons)
 
-    print("")
+    log("")
 
 
 def processLucide(workDir: Path, iconsDir: Path, jobs: dict) -> None:
@@ -319,7 +319,7 @@ def processLucide(workDir: Path, iconsDir: Path, jobs: dict) -> None:
 
     for file, job in jobs.items():
         name: str = job["name"]
-        print(f"Processing: {name}")
+        log(f"[b]Processing:[e] {name}")
 
         icons: dict[str, ET.Element] = {}
         iconSrc = srcRepo / "icons"
@@ -334,12 +334,12 @@ def processLucide(workDir: Path, iconsDir: Path, jobs: dict) -> None:
                 svg.set("width", "128")
                 icons[key] = svg
             else:
-                print(f"Not Found: {iconFile}")
+                log(f"[cr]Not Found:[e] {iconFile}")
 
         target = iconsDir / f"{file}.icons"
         _writeThemeFile(target, name, "Cole Bemis, Lucide Contributors", "ISC/MIT License", icons)
 
-    print("")
+    log("")
 
 
 def processRemix(workDir: Path, iconsDir: Path, jobs: dict) -> None:
@@ -352,7 +352,7 @@ def processRemix(workDir: Path, iconsDir: Path, jobs: dict) -> None:
         name: str = job["name"]
         style = "fill" if job["filled"] else "line"
 
-        print(f"Processing: {name}")
+        log(f"[b]Processing:[e] {name}")
 
         icons: dict[str, ET.Element] = {}
         iconSrc = srcRepo / "icons"
@@ -373,7 +373,7 @@ def processRemix(workDir: Path, iconsDir: Path, jobs: dict) -> None:
                     if iconFile.is_file():
                         break
                 else:
-                    print(f"Not Found: {fileName}")
+                    log(f"[cr]Not Found:[e] {fileName}")
                     continue
 
             svg = ET.fromstring(iconFile.read_text(encoding="utf-8"))
@@ -385,15 +385,15 @@ def processRemix(workDir: Path, iconsDir: Path, jobs: dict) -> None:
         target = iconsDir / f"{file}.icons"
         _writeThemeFile(target, name, "Remix Icon", "Apache 2.0", icons)
 
-    print("")
+    log("")
 
 
 def main(args: argparse.Namespace) -> None:
     """Build icon themes entry point."""
-    print("")
-    print("Build Icon Themes")
-    print("=================")
-    print("")
+    log("")
+    log("[b]Build Icon Themes[e]")
+    log("[b]=================[e]")
+    log("")
 
     workDir = Path(args.work_dir).absolute()
     workDir.mkdir(exist_ok=True)
@@ -482,5 +482,5 @@ def main(args: argparse.Namespace) -> None:
             },
         )
 
-    print("Done")
-    print("")
+    log("[cg]Done[e]")
+    log("")

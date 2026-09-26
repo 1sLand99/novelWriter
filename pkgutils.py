@@ -43,6 +43,7 @@ from utils.common import (
     extractReqs,
     extractVersion,
     isStableVersion,
+    log,
     readFile,
     stripVersion,
     writeFile,
@@ -65,9 +66,9 @@ def printChannel(args: argparse.Namespace) -> None:
 
 def cleanBuildDirs(args: argparse.Namespace) -> None:
     """Recursively delete the 'build' and 'dist' folders."""
-    print("")
-    print("Cleaning up build environment ...")
-    print("")
+    log("")
+    log("[b]Cleaning up build environment ...[e]")
+    log("")
 
     folders = [
         ROOT_DIR / ".flatpak-builder",
@@ -88,13 +89,13 @@ def cleanBuildDirs(args: argparse.Namespace) -> None:
         if folder.is_dir():
             try:
                 shutil.rmtree(folder)
-                print(f"Deleted: {folder}")
+                log(f"[cg]Deleted:[e] {folder}")
             except OSError:
-                print(f"Failed:  {folder}")
+                log(f"[cr]Failed:[e]  {folder}")
         else:
-            print(f"Missing: {folder}")
+            log(f"[cy]Missing:[e] {folder}")
 
-    print("")
+    log("")
 
 
 def genMacOSPlist(args: argparse.Namespace) -> None:
@@ -114,7 +115,7 @@ def genMacOSPlist(args: argparse.Namespace) -> None:
         macosBundleCopyright=f"Copyright {copyrightYear}, Veronica Berglyd Olsen",
     )
 
-    print(f"Writing Info.plist to {outDir}/Info.plist")
+    log(f"[b]Writing Info.plist to {outDir}/Info.plist[e]")
     writeFile(outDir / "Info.plist", plistXML)
 
 
