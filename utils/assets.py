@@ -23,15 +23,24 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
+import time
+import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 
+from datetime import UTC, datetime
 from pathlib import Path
 
-from utils.common import ROOT_DIR, log, writeFile
+from utils.common import ROOT_DIR, apiRequest, getEnvValue, log, writeFile
 from utils.docs import buildPdfDocAssets
+
+CROWDIN_API = "https://api.crowdin.com/api/v2"
+CROWDIN_PROJECT_ID = 476941
+
+_NAME_SUFFIX_RE = re.compile(r"\s*\([^)]*\)\s*$")
 
 
 def _normaliseTsLocations(tsFile: Path) -> tuple[int, int]:
@@ -90,6 +99,137 @@ def _validateTsTranslation(path: Path, expected: int, threshold: float) -> None:
             path.unlink()
     except Exception:
         log(f"[cr]ERROR:[e] Could not process file {path}")
+
+
+def _crowdinLanguageIds(token: str) -> dict[str, str]:
+    """Map Qt locale codes, e.g. fr_FR, to Crowdin language ids."""
+    result = apiRequest(f"{CROWDIN_API}/languages?limit=500", token)
+    return {item["data"]["locale"].replace("-", "_"): item["data"]["id"] for item in result["data"]}
+
+
+def _changedLanguages() -> set[str]:
+    """Return locale codes for translation files with pending git changes."""
+    result = subprocess.run(
+        ["git", "status", "--porcelain", "--", "i18n", "novelwriter/assets/i18n"],
+        cwd=ROOT_DIR,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    locales = set()
+    for line in result.stdout.splitlines():
+        name = Path(line[3:].strip()).stem
+        if name.startswith("nw_") and name != "nw_base":
+            locales.add(name[len("nw_") :])
+        elif name.startswith("project_") and name != "project_en_GB":
+            locales.add(name[len("project_") :])
+    return locales
+
+
+def _languageLabel(locale: str) -> str:
+    """Resolve a Qt locale code to a human-readable name, e.g. French (fr-FR)."""
+    from PyQt6.QtCore import QLocale
+
+    qLocale = QLocale(locale)
+    name = QLocale.languageToString(qLocale.language())
+    return f"{name} ({qLocale.name().replace('_', '-')})"
+
+
+def _contributorLine(entry: dict) -> str | None:
+    """Format a report entry as a name with translated/approved counts, or
+    None if both are zero, as the activity was likely uncredited voting.
+    """
+    translated = entry.get("translated", 0)
+    approved = entry.get("approved", 0)
+    if not (translated or approved):
+        return None
+
+    fullName = entry.get("user", {}).get("fullName", "")
+    name = _NAME_SUFFIX_RE.sub("", fullName).strip()
+    if not name:
+        return None
+
+    counts = ", ".join(f"{n} {label}" for n, label in [(translated, "translated"), (approved, "approved")] if n)
+    return f"{name} ({counts})"
+
+
+def _generateTopMembersReport(token: str, languageId: str, dateFrom: str, dateTo: str) -> list[dict]:
+    """Generate and download a Top Members report for a single language."""
+    body = {
+        "name": "top-members",
+        "schema": {"languageId": languageId, "format": "json", "dateFrom": dateFrom, "dateTo": dateTo},
+    }
+    url = f"{CROWDIN_API}/projects/{CROWDIN_PROJECT_ID}/reports"
+    report = apiRequest(url, token, body)["data"]
+
+    deadline = time.monotonic() + 60
+    while report["status"] != "finished":
+        if time.monotonic() > deadline:
+            raise TimeoutError("Timed out waiting for Crowdin report generation")
+        time.sleep(2)
+        report = apiRequest(f"{url}/{report['identifier']}", token)["data"]
+
+    link = apiRequest(f"{url}/{report['identifier']}/download", token)["data"]["url"]
+    with urllib.request.urlopen(link) as response:
+        data = json.loads(response.read())
+
+    return data if isinstance(data, list) else data.get("data", [])
+
+
+def _printCreditsSummary(sinceDate: str) -> None:
+    """Print a PR-ready translator credits summary for languages changed since sinceDate."""
+    log("")
+    log("[b]Translator Credits[e]")
+    log("[b]==================[e]")
+    log("")
+
+    if not CROWDIN_PROJECT_ID:
+        log("[cr]CROWDIN_PROJECT_ID is not set in utils/assets.py[e]")
+        return
+
+    locales = sorted(_changedLanguages())
+    if not locales:
+        log("[cy]No changed translation files found[e]")
+        return
+
+    token = getEnvValue("CROWDIN_REPORT_READ_TOKEN", "Crowdin API token (project.report, read only)")
+    dateFrom = f"{sinceDate}T00:00:00+00:00"
+    dateTo = datetime.now(tz=UTC).isoformat(timespec="seconds")
+
+    try:
+        languageIds = _crowdinLanguageIds(token)
+    except Exception as exc:
+        log("[cr]Could not fetch Crowdin language list[e]")
+        log(exc)
+        return
+
+    lines = []
+    for locale in locales:
+        languageId = languageIds.get(locale)
+        if languageId is None:
+            log(f"[cr]Unknown Crowdin language for:[e] {locale}")
+            continue
+
+        try:
+            entries = _generateTopMembersReport(token, languageId, dateFrom, dateTo)
+        except Exception as exc:
+            log(f"[cr]Could not generate report for:[e] {locale}")
+            log(exc)
+            continue
+
+        contributors = sorted(c for e in entries if (c := _contributorLine(e)))
+        if contributors:
+            lines.append(f"- **{_languageLabel(locale)}**: {', '.join(contributors)}")
+            log(f"[cg]Report done:[e] {locale} ({len(contributors)} contributors)")
+        else:
+            log(f"[cy]No contributors found:[e] {locale}")
+
+    log("")
+    log("[b]PR Summary (copy/paste):[e]")
+    log("")
+    for line in lines:
+        log(line)
+    log("")
 
 
 def buildSampleZip(args: argparse.Namespace | None = None) -> None:
@@ -156,6 +296,9 @@ def importI18nUpdates(args: argparse.Namespace) -> None:
                 log(f"[cy]Skipped:[e] {item}")
 
     log("")
+
+    if args.credits_since:
+        _printCreditsSummary(args.credits_since)
 
 
 def updateTranslationSources(args: argparse.Namespace) -> None:

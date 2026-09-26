@@ -21,11 +21,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
+import getpass
+import json
 import os
 import shutil
 import subprocess
 import sys
 import tomllib
+import urllib.error
+import urllib.request
 
 from datetime import datetime
 from pathlib import Path
@@ -99,6 +103,41 @@ def updateMetaFile(metaFile: Path, buildFormat: str, installSource: str) -> None
         encoding="utf-8",
     )
     log(f"[cg]Wrote:[e] {metaFile.relative_to(ROOT_DIR)}")
+
+
+def readEnvFile() -> dict[str, str]:
+    """Read a simple KEY=VALUE .env file from the project root into a dict."""
+    envFile = ROOT_DIR / ".env"
+    values = {}
+    if envFile.is_file():
+        for line in envFile.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            values[key.strip()] = value.strip()
+    return values
+
+
+def getEnvValue(key: str, prompt: str) -> str:
+    """Resolve a value from the environment, the .env file, or a masked prompt."""
+    if value := os.environ.get(key) or readEnvFile().get(key):
+        return value
+    return getpass.getpass(f"{prompt}: ").strip()
+
+
+def apiRequest(url: str, token: str, data: dict | None = None) -> dict:
+    """Make an authenticated GET or POST request against a JSON API."""
+    body = json.dumps(data).encode("utf-8") if data is not None else None
+    request = urllib.request.Request(url, data=body, method="POST" if body else "GET")
+    request.add_header("Authorization", f"Bearer {token}")
+    request.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(request) as response:
+            return json.loads(response.read())
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"API error {exc.code}: {detail}") from exc
 
 
 def extractReqs(groups: list[str]) -> list[str]:
