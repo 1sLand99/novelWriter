@@ -159,6 +159,7 @@ if __name__ == "__main__":
     cmdImportTS = parsers.add_parser("qtlimport", help="Import updated i18n files from a Crowdin zip file.")
     cmdImportTS.add_argument("file", help="Path to zip file from Crowdin")
     cmdImportTS.add_argument("--threshold", type=float, default=75.0, help="Minimum translation percentage.")
+    cmdImportTS.add_argument("--credits-since", metavar="DATE", help="Print translator credits since DATE.")
     cmdImportTS.set_defaults(func=utils.assets.importI18nUpdates)
 
     # Update i18n Sources
